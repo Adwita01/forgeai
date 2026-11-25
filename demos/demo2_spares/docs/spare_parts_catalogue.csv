@@ -1,0 +1,41 @@
+part_no,description,equipment,supplier,unit_price_usd,stock_qty,min_stock,lead_time_days,warehouse,criticality
+HEP-ME-1001,Fuel injection valve nozzle,Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,1840.00,17,6,21,Singapore,critical
+HEP-ME-1002,Fuel pump plunger and barrel assembly,Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,6250.00,0,2,35,Rotterdam,critical
+HEP-ME-1003,Exhaust valve spindle,Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,9400.00,2,1,42,Fujairah,critical
+HEP-ME-1004,Piston ring set (one cylinder),Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,2380.00,8,2,28,Singapore,critical
+HEP-ME-1005,Cylinder liner O-ring kit,Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,315.50,11,6,14,Rotterdam,high
+HEP-ME-1006,Starting air valve overhaul kit,Main engine MAN B&W 6S50ME-C,Halcyon Engine Parts Pte. Ltd.,1125.00,0,2,21,Fujairah,high
+HEP-ME-1007,Turbocharger bearing set,Turbocharger ABB A170-L,Halcyon Engine Parts Pte. Ltd.,7820.00,3,1,49,Singapore,critical
+HEP-ME-1008,Turbocharger nozzle ring,Turbocharger ABB A170-L,Halcyon Engine Parts Pte. Ltd.,11900.00,3,1,56,Rotterdam,critical
+HEP-AE-2001,Fuel injector complete,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,960.00,6,4,14,Fujairah,high
+HEP-AE-2002,Cylinder head gasket,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,142.75,5,6,10,Singapore,medium
+HEP-AE-2003,Lube oil filter element,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,38.40,72,24,7,Rotterdam,medium
+HEP-AE-2004,Fuel oil filter element,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,41.90,59,24,7,Fujairah,medium
+HEP-AE-2005,Cooling water pump mechanical seal,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,465.00,5,3,14,Singapore,high
+HEP-AE-2006,Connecting rod bearing shell pair,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,288.00,4,6,21,Rotterdam,high
+HEP-AE-2007,Governor actuator,Auxiliary engine Yanmar 6EY18ALW,Halcyon Engine Parts Pte. Ltd.,4150.00,5,1,35,Fujairah,critical
+HEP-PU-3001,Fuel oil purifier bowl disc set,Separator Alfa Laval S821,Halcyon Engine Parts Pte. Ltd.,2740.00,2,1,28,Singapore,high
+HEP-PU-3002,Purifier major service kit,Separator Alfa Laval S821,Halcyon Engine Parts Pte. Ltd.,1395.00,3,2,21,Rotterdam,high
+HEP-CO-3101,Air compressor valve plate kit,Main air compressor Sperre HV2/200,Halcyon Engine Parts Pte. Ltd.,690.00,0,2,21,Fujairah,high
+HEP-CO-3102,Air compressor piston ring set,Main air compressor Sperre HV2/200,Halcyon Engine Parts Pte. Ltd.,355.00,4,2,14,Singapore,medium
+HEP-BO-3201,Boiler burner nozzle,Aux boiler Aalborg OL,Halcyon Engine Parts Pte. Ltd.,520.00,7,3,21,Rotterdam,high
+KMS-EL-4001,Main switchboard air circuit breaker 1600A,Main switchboard,Kestrel Marine Supply Ltd.,8650.00,2,1,42,Fujairah,critical
+KMS-EL-4002,Motor contactor 95A,Engine room motor starters,Kestrel Marine Supply Ltd.,310.00,4,4,10,Singapore,high
+KMS-EL-4003,LED floodlight 150W,Deck lighting,Kestrel Marine Supply Ltd.,236.00,10,6,7,Rotterdam,low
+KMS-EL-4004,Navigation light lamp 65W,Navigation lights,Kestrel Marine Supply Ltd.,18.60,62,20,5,Fujairah,high
+KMS-EL-4005,Emergency generator battery 12V 200Ah,Emergency generator,Kestrel Marine Supply Ltd.,545.00,8,2,10,Singapore,critical
+KMS-EL-4006,Insulation resistance tester,Workshop,Kestrel Marine Supply Ltd.,780.00,1,1,14,Rotterdam,low
+KMS-SA-5001,Lifejacket SOLAS 150N,Life-saving appliances,Kestrel Marine Supply Ltd.,64.00,45,30,7,Fujairah,critical
+KMS-SA-5002,Immersion suit SOLAS,Life-saving appliances,Kestrel Marine Supply Ltd.,412.00,14,6,14,Singapore,critical
+KMS-SA-5003,SCBA cylinder 6.8L carbon,Fire-fighting equipment,Kestrel Marine Supply Ltd.,690.00,14,4,21,Rotterdam,critical
+KMS-SA-5004,Fire hose 15m 45mm with couplings,Fire-fighting equipment,Kestrel Marine Supply Ltd.,128.00,4,10,7,Fujairah,high
+KMS-SA-5005,CO2 extinguisher 5kg,Fire-fighting equipment,Kestrel Marine Supply Ltd.,96.50,9,8,7,Singapore,high
+KMS-SA-5006,Lifebuoy self-activating light,Life-saving appliances,Kestrel Marine Supply Ltd.,74.00,19,6,7,Rotterdam,high
+KMS-DK-6001,Mooring rope HMPE 64mm x 220m,Mooring equipment,Kestrel Marine Supply Ltd.,9800.00,3,1,35,Fujairah,high
+KMS-DK-6002,Mooring winch brake lining set,Mooring winch,Kestrel Marine Supply Ltd.,1460.00,2,2,28,Singapore,high
+KMS-DK-6003,Hydraulic hose assembly 1/2in x 2m,Deck cranes,Kestrel Marine Supply Ltd.,54.00,26,12,5,Rotterdam,medium
+KMS-DK-6004,Crane wire rope 22mm x 120m,Deck cranes,Kestrel Marine Supply Ltd.,3350.00,4,1,28,Fujairah,critical
+KMS-DK-6005,Pilot ladder 9m SOLAS,Pilot transfer,Kestrel Marine Supply Ltd.,1180.00,4,1,21,Singapore,critical
+KMS-NV-7001,Gyro compass sensitive element,Navigation equipment,Kestrel Marine Supply Ltd.,14500.00,0,1,63,Rotterdam,critical
+KMS-NV-7002,ECDIS backup UPS battery,Navigation equipment,Kestrel Marine Supply Ltd.,395.00,4,2,14,Fujairah,high
+KMS-NV-7003,VHF handheld radio GMDSS,Radio equipment,Kestrel Marine Supply Ltd.,610.00,9,3,10,Singapore,critical
