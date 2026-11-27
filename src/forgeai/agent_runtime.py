@@ -91,9 +91,64 @@ class Agent:
         for call in plan.calls[:3]:
             if call.tool not in callable_tools:  # hard guard: agent may only use attached tools
                 continue
+            args = self._sanitise_call(call.tool, dict(call.args or {}), question, retrieved, prior)
+            if args is None:
+                continue
+            call.args = args
             out, err = run_tool(call.tool, call.args, self.tool_ctx)
             results.append(ToolResult(tool=call.tool, args=call.args, output=out, error=err))
         return results
+
+    _ARITH = re.compile(r"\b(total|cost|costs|sum|how much|multipl\w*|times|difference|percent\w*|average|combined|"
+                        r"surcharge|price for|order of|value of)\b|%|\d+\s*(?:units?|pcs|pieces|x)\b", re.I)
+
+    def _sanitise_call(self, tool: str, args: dict, question: str, retrieved: list[RetrievedChunk],
+                       prior: list[ToolResult]) -> Optional[dict]:
+        """Deterministic guard rails around the small model's tool plan (returns None to drop the call)."""
+        if tool == "csv_lookup":
+            tables = list(self.tool_ctx.tables)
+            f = str(args.get("file") or args.get("filename") or "")
+            if f and f not in self.tool_ctx.tables:
+                if f.lower().endswith((".pdf", ".txt", ".md")) or " p." in f or len(tables) != 1:
+                    return None  # lookups on PDFs or invented tables are noise
+                args["file"] = tables[0]
+            return args
+        if tool == "calculator":
+            if not self._ARITH.search(question) and not prior:
+                return None  # no arithmetic in the question: a calculator call can only add noise
+            expr = str(args.get("expression", ""))
+            names = set(re.findall(r"[A-Za-z_][A-Za-z_0-9]*", expr)) - {"max", "min", "round", "abs", "sum"}
+            if names:  # e.g. "4 * unit_price_usd": fill in values from the one catalogue row the question names
+                vals = self._row_values(question, retrieved, prior)
+                if all(n in vals for n in names):
+                    for n in sorted(names, key=len, reverse=True):
+                        expr = re.sub(rf"\b{re.escape(n)}\b", vals[n], expr)
+                    args["expression"] = expr
+            return args
+        return args
+
+    @staticmethod
+    def _row_values(question: str, retrieved: list[RetrievedChunk], prior: list[ToolResult]) -> dict[str, str]:
+        """Numeric fields of the single CSV row whose identifier the question mentions."""
+        qlow = question.lower()
+        rows = []
+        for c in retrieved:
+            if not c.locator.startswith("row"):
+                continue
+            line = next((ln for ln in c.text.splitlines() if re.match(r"\s*row\s+\d+\s*:", ln)), "")
+            body = line.split(":", 1)[1] if line else ""
+            fields = {k.strip(): v.strip() for k, v in (part.split(":", 1) for part in body.split(";") if ":" in part)}
+            ident = next((v for v in fields.values() if re.search(r"[A-Za-z]+-[A-Za-z]*-?\d+", v)), "")
+            if ident and ident.strip().lower() in qlow:
+                rows.append(fields)
+        if len(rows) != 1:
+            return {}
+        out = {}
+        for k, v in rows[0].items():
+            num = re.sub(r"[^\d.\-]", "", v)
+            if num and re.fullmatch(r"-?\d+(?:\.\d+)?", num):
+                out[k.strip()] = num
+        return out
 
     def _tools(self, question: str, retrieved: list[RetrievedChunk]) -> list[ToolResult]:
         results: list[ToolResult] = []

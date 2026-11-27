@@ -14,11 +14,11 @@ import random
 import re
 from typing import Callable, Optional
 
-from ..llm import LLM, LLMError, load_prompt, split_prompt
+from ..llm import FALLBACK_ERRORS, LLM, LLMError, load_prompt, split_prompt
 from ..parsing import Chunk, LoadedDoc
 from ..retriever import tokenize
 from ..schemas import EvalCase, EvalCategory, EvalSet, EvidenceManifest, GenQA, GenQuestions, Requirements
-from ..textutil import fact_supported, norm, numbers
+from ..textutil import content_tokens, fact_supported, norm, numbers, overlap
 from ..tools.calculator import evaluate
 
 MIN_CASES = 22
@@ -54,8 +54,44 @@ def _pick_spread(chunks: list[Chunk], n: int, rng: random.Random) -> list[Chunk]
     return out
 
 
+_PASSAGE_PREFIX = re.compile(r"^\s*\(?passage\s+[ab12]\)?\s*[:\-.]\s*", re.I)
+
+
 def _verified_facts(facts: list[str], source: str) -> list[str]:
-    return [f.strip() for f in facts if f.strip() and fact_supported(f, source)][:4]
+    facts = [_PASSAGE_PREFIX.sub("", f).strip() for f in facts]
+    return [f for f in facts if f and fact_supported(f, source)][:4]
+
+
+def _readable(question: str, vocab: set[str]) -> bool:
+    """A typo-style rewrite must stay human-readable: at least half its words still recognisable."""
+    words = [w for w in re.findall(r"[a-z]{3,}", question.lower())]
+    if not words:
+        return False
+    known = sum(1 for w in words if w in vocab or w in _COMMON)
+    return known / len(words) >= 0.5
+
+
+_COMMON = set("""what which when where who why how the and for are can does did will would should could with from that this
+there their about into over under after before within without much many any all our your you have has had was were been
+being not per each days day year years month months time date long rules rule allowed need needed tell know get got""".split())
+
+
+def _bad_question(question: str, facts: list[str], source: str) -> str:
+    """Reasons to discard a generated case whose facts don't answer its question."""
+    if re.search(r"\bwhich of the following\b|\(\s*[a-d]\s*\)|\b[a-d]\)\s", question, re.I):
+        return "multiple-choice format"
+    # a number the question asks about ("5 years of service") that the passage contains must appear in a key fact,
+    # otherwise the facts describe something else (e.g. the base entitlement instead of the 5-year one)
+    asked = numbers(question) & numbers(source)
+    if asked and not any(asked & numbers(f) for f in facts):
+        return f"question asks about {sorted(asked)} but no key fact mentions it"
+    return ""
+
+
+def _absent_terms(question: str, vocab_stems: set[str]) -> list[str]:
+    """Content words of the question whose stem occurs nowhere in the corpus (e.g. 'salary range')."""
+    return sorted({w for w in content_tokens(question) if len(w) > 3 and w.isalpha() and w[:5] not in vocab_stems
+                   and w not in _COMMON})
 
 
 class EvalGenerator:
@@ -67,6 +103,10 @@ class EvalGenerator:
         self.notes: list[str] = []
         self.progress = progress or (lambda m: None)
         self._seen: set[str] = set()
+        self._vocab: set[str] = set()
+        for c in chunks:
+            self._vocab |= {w for w in re.findall(r"[a-z]{3,}", c.text.lower())}
+        self._vocab_stems = {w[:5] for w in self._vocab}
         self._used_chunks: set[str] = set()
 
     # ------------------------------------------------------------------ helpers
@@ -81,12 +121,15 @@ class EvalGenerator:
     def _id(self, prefix: str) -> str:
         return f"{prefix}-{sum(1 for c in self.cases if c.id.startswith(prefix)) + 1:02d}"
 
-    def _gen_single(self, c: Chunk) -> Optional[EvalCase]:
+    def _gen_single(self, c: Chunk, avoid: Optional[list[str]] = None) -> Optional[EvalCase]:
         sys_t, user_t = split_prompt(load_prompt("eval_gen_single", self.llm.s, audience=self.req.audience,
                                                  label=f"[{c.filename} {c.locator}]", passage=c.text[:1800]))
+        if avoid:
+            user_t += ("\n\nThese questions about this passage already exist - ask about a DIFFERENT fact:\n"
+                       + "\n".join(f"- {q}" for q in avoid))
         try:
             g = self.llm.structured(GenQA, sys_t, user_t, stage="eval_gen", temperature=0.4, max_tokens=500)
-        except LLMError:
+        except FALLBACK_ERRORS:
             return None
         facts = _verified_facts(g.key_facts, c.text)
         if not facts and g.answer and fact_supported(g.answer, c.text):
@@ -94,19 +137,32 @@ class EvalGenerator:
         if not facts or not g.question.strip():
             self.notes.append(f"discarded single-doc case from {c.chunk_id}: key facts not found in source")
             return None
+        why = _bad_question(g.question, facts, c.text)
+        absent = _absent_terms(g.question, self._vocab_stems)
+        if not why and len(absent) >= 3:
+            why = f"question asks about things the documents never mention ({', '.join(absent)})"
+        if why:
+            self.notes.append(f"discarded single-doc case from {c.chunk_id}: {why}")
+            return None
         return EvalCase(id="", category=EvalCategory.single_doc, question=g.question.strip(), expected_behavior="answer",
                         expected_sources=[c.filename], key_facts=facts, rationale=f"generated from {c.filename} {c.locator}",
                         generated_from=[c.chunk_id])
 
     # ------------------------------------------------------------------ categories
-    def single_doc(self, n: int) -> None:
-        pool = [c for c in _pick_spread(self.chunks, n * 3, self.rng) if c.chunk_id not in self._used_chunks]
+    def single_doc(self, n: int, reuse: bool = False) -> None:
+        """reuse=True (top-up on small corpora): ask a second question about an already-used passage,
+        telling the model which questions already exist so it picks a different detail."""
+        pool = [c for c in _pick_spread(self.chunks, max(n * 3, len(self.chunks)) if reuse else n * 3, self.rng)
+                if reuse or c.chunk_id not in self._used_chunks]
         made = 0
         for c in pool:
             if made >= n:
                 break
             self.progress(f"eval_gen single_doc {made + 1}/{n}")
-            case = self._gen_single(c)
+            avoid = [x.question for x in self.cases if c.chunk_id in (x.generated_from or [])] if reuse else []
+            if reuse and not avoid:
+                avoid = ["(none yet)"]
+            case = self._gen_single(c, avoid=avoid)
             if case:
                 case.id = self._id("S")
                 if self._add(case):
@@ -177,12 +233,20 @@ class EvalGenerator:
                                                      label_b=f"[{b.filename} {b.locator}]", passage_b=b.text[:1400]))
             try:
                 g = self.llm.structured(GenQA, sys_t, user_t, stage="eval_gen", temperature=0.4, max_tokens=600)
-            except LLMError:
+            except FALLBACK_ERRORS:
                 continue
             fa = _verified_facts(g.key_facts, a.text)
             fb = _verified_facts(g.key_facts, b.text)
             if not fa or not fb:
                 self.notes.append(f"discarded multi-doc case {a.chunk_id} + {b.chunk_id}: facts not traceable to both passages")
+                used.update({a.chunk_id, b.chunk_id})
+                continue
+            why = _bad_question(g.question, fa + fb, a.text + "\n" + b.text)
+            absent = _absent_terms(g.question, self._vocab_stems)
+            if not why and len(absent) >= 3:
+                why = f"question asks about things the documents never mention ({', '.join(absent)})"
+            if why:
+                self.notes.append(f"discarded multi-doc case {a.chunk_id} + {b.chunk_id}: {why}")
                 used.update({a.chunk_id, b.chunk_id})
                 continue
             if self._add(EvalCase(id=self._id("M"), category=EvalCategory.multi_doc, question=g.question.strip(), expected_behavior="answer",
@@ -200,6 +264,12 @@ class EvalGenerator:
                                question=f"Can you tell me about {g}?", expected_behavior="refuse",
                                rationale=f"groundability gap: '{g}' is not supported by the documents"))
         remaining = n - sum(1 for c in self.cases if c.category == EvalCategory.out_of_scope)
+        # the requester's own exclusions are policy refusals whatever the documents say: test them directly,
+        # leaving at least one slot for model-written traps
+        for t in self._policy_refusals()[: max(0, remaining - 1)]:
+            if self._add(EvalCase(id=self._id("R"), category=EvalCategory.out_of_scope, question=f"Can you help me with {t}?",
+                                  expected_behavior="refuse", rationale=f"requester excluded '{t}'")):
+                remaining -= 1
         if remaining <= 0:
             return
         self.progress("eval_gen out_of_scope")
@@ -210,7 +280,7 @@ class EvalGenerator:
         qs: list[str] = []
         try:
             qs = self.llm.structured(GenQuestions, sys_t, user_t, stage="eval_gen", temperature=0.6, max_tokens=700).questions
-        except LLMError:
+        except FALLBACK_ERRORS:
             pass
         if not qs:
             qs = [f"What does the guidance say about {t}?" for t in self.req.must_refuse_topics]
@@ -218,9 +288,42 @@ class EvalGenerator:
         for q in qs:
             if remaining <= 0:
                 break
+            if self._answerable(q):
+                self.notes.append(f"discarded refusal question the documents largely answer: {q.strip()[:90]}")
+                continue
             if self._add(EvalCase(id=self._id("R"), category=EvalCategory.out_of_scope, question=q.strip(), expected_behavior="refuse",
                                   rationale="outside the documented scope / must-refuse topic")):
                 remaining -= 1
+
+    _GENERIC_REFUSAL = re.compile(r"^(anything|everything|topics?|questions?|information|other)\b.*\b(not|outside)\b|\bnot (written|covered)\b", re.I)
+    _NOT_IN_DOCS = re.compile(r"\s*\((?:not|no)\b[^)]*\)|\s+(?:that are )?not (?:in|covered by|written in) (?:the |our )?"
+                              r"(?:documents?|policies|manifest)\b.*$", re.I)
+
+    def _policy_refusals(self) -> list[str]:
+        """Concrete must-refuse topics, cleaned of 'not in the documents' tails; generic catch-alls skipped."""
+        out = []
+        for raw in self.req.must_refuse_topics:
+            t = self._NOT_IN_DOCS.sub("", raw.strip()).strip(" .,")
+            # judge "generic" on the original text: "anything not written in our policies" must not shrink to "anything"
+            if not t or self._GENERIC_REFUSAL.search(raw) or t.lower() in ("anything", "everything", "other", "others") or len(t.split()) > 8:
+                continue
+            out.append(t)
+        gaps = {norm(g.requirement) for g in self.req.ungrounded_requirements}
+        return [t for t in dict.fromkeys(out) if norm(t) not in gaps]
+
+    def _answerable(self, question: str) -> bool:
+        """A 'refusal' question that names a grounded topic, or whose words mostly occur in one passage,
+        is probably answerable - a bad trap. Prefix stems, so 'level' ~ 'levels'."""
+        def stems(s):
+            return {t[:5] for t in content_tokens(s) if len(t) > 2}
+        q = stems(question)
+        if not q:
+            return False
+        for topic in self.req.grounded_topics:
+            ts = stems(topic)
+            if ts and ts <= q:
+                return True
+        return max((len(q & stems(c.text)) / len(q) for c in self.chunks), default=0.0) >= 0.6
 
     def edge(self, n: int) -> None:
         bases = [c for c in self.cases if c.category in (EvalCategory.single_doc, EvalCategory.multi_doc) and c.needs_tool is None]
@@ -234,10 +337,13 @@ class EvalGenerator:
             sys_t, user_t = split_prompt(load_prompt("eval_gen_edge", self.llm.s, style=style, question=base.question, facts="; ".join(base.key_facts)))
             try:
                 g = self.llm.structured(GenQA, sys_t, user_t, stage="eval_gen", temperature=0.7, max_tokens=250)
-            except LLMError:
+            except FALLBACK_ERRORS:
                 continue
             q = g.question.strip()
             if not q or norm(q) == norm(base.question):
+                continue
+            if not _readable(q, self._vocab | {w for w in re.findall(r"[a-z]{3,}", base.question.lower())}):
+                self.notes.append(f"discarded unreadable {style} rewrite of {base.id}: {q[:60]}")
                 continue
             if self._add(EvalCase(id=self._id("E"), category=EvalCategory.edge, question=q, expected_behavior="answer",
                                   expected_sources=base.expected_sources, key_facts=base.key_facts,
@@ -269,10 +375,16 @@ class EvalGenerator:
         self.out_of_scope(n_refuse)
         self.edge(n_edge)
         # top-up: never ship fewer than MIN_CASES if the documents allow it
+        # fresh passages first, then second questions on used passages, then extra edge rewrites
         attempts = 0
-        while len(self.cases) < MIN_CASES and attempts < 3:
-            self.single_doc(MIN_CASES - len(self.cases))
+        while len(self.cases) < MIN_CASES and attempts < 5:
+            before = len(self.cases)
+            self.single_doc(MIN_CASES - len(self.cases), reuse=attempts >= 1)
+            if len(self.cases) == before and attempts >= 2:
+                self.edge(MIN_CASES - len(self.cases))
             attempts += 1
+        if self.llm.budget.exhausted():
+            self.notes.append(f"budget exhausted during eval generation: stopped at {len(self.cases)} cases")
         if len(self.cases) < MIN_CASES:
             self.notes.append(f"only {len(self.cases)} verifiable cases could be generated (target {MIN_CASES}) - corpus too small or model output unverifiable")
         return EvalSet(cases=self.cases, generator_model=self.llm.s.model, notes=list(dict.fromkeys(self.notes)))

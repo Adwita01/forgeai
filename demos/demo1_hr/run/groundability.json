@@ -1,0 +1,47 @@
+{
+  "dense_backend": "embed:nomic-embed-text",
+  "verdicts": [
+    {
+      "topic": "annual leave",
+      "verdict": "supported",
+      "evidence_quote": "the following year. Annual leave accrues monthly at 2 working days per completed month of service (2.5 working days for employees on the 30-day entitlement). New joiners may take accrued leave after completing their 3-month probation period. Length of continuous service Annual leave Maximum single block Less than 5 years 24 working days 15 working days 5 years or more 30 working days 20 working days",
+      "reason": "The provided excerpts contain specific details about annual leave accrual, maximum single block, and conditions for taking leave, which directly support answering questions on the topic of annual leave."
+    },
+    {
+      "topic": "sick leave",
+      "verdict": "supported",
+      "evidence_quote": "Shore staff are entitled to 14 calendar days of paid outpatient sick leave per calendar year, and up to 60 calendar days of paid hospitalisation leave (inclusive of the 14 days). A medical certificate from a registered practitioner is required for any absence of 2 or more consecutive days, and for any sick day adjacent to a public holiday or annual leave.",
+      "reason": "The excerpt clearly states the entitlements and requirements for sick leave, including the number of days, the need for a medical certificate, and the notification process."
+    },
+    {
+      "topic": "parental leave",
+      "verdict": "supported",
+      "evidence_quote": "Maternity leave: 16 weeks of paid leave for employees with at least 6 months of service, of which up to 4 weeks may be taken before the end of the pregnancy. Employees must give at least 8 weeks' written notice of intended maternity or adoption leave, supported by medical or agency documentation.",
+      "reason": "The excerpt provides specific details about parental leave, including maternity leave and the required notice period."
+    },
+    {
+      "topic": "crew shore leave",
+      "verdict": "supported",
+      "evidence_quote": "CSL-02 Crew Shore Leave and Port Conduct Policy - fictional document for demonstration Page 1 CSL-02 Crew Shore Leave and Port Conduct Policy Bluewater Fleet Management Pte. Ltd. | Marine HR & Crewing | Version 2.0 | Effective 1 March 2026 | Owner: Director of Crewing 1. Purpose This policy implements the shore leave provisions of the Maritime Labour Convention 2006 (Regulation 2.4) for seafarers serving on vessels managed by Bluewater Fleet Management Pte. Ltd..",
+      "reason": "The excerpt clearly states the purpose of the policy, which is to implement shore leave provisions for seafarers. This directly supports the topic of crew shore leave."
+    },
+    {
+      "topic": "crew rotation",
+      "verdict": "supported",
+      "evidence_quote": "CRT-03 Crew Leave, Rotation and Travel Policy - fictional document for demonstration Page 1 CRT-03 Crew Leave, Rotation and Travel Policy Bluewater Fleet Management Pte. Ltd. | Marine HR & Crewing | Version 3.1 | Effective 1 March 2026 | Owner: Director of Crewing 1. Scope This policy applies to all seafarers employed or managed by Bluewater Fleet Management Pte. Ltd. serving on board Company-managed vessels. It sets out tour lengths, leave accrual, sign-off and repatriation, and travel arrangements.",
+      "reason": "The excerpt clearly states that the policy applies to all seafarers employed or managed by Bluewater Fleet Management Pte. Ltd. serving on board Company-managed vessels, which directly addresses the topic of crew rotation."
+    },
+    {
+      "topic": "relief and travel arrangements",
+      "verdict": "partial",
+      "evidence_quote": "The excerpts provide details on relief and sign-off procedures, including the requirement for 30 days' notice of the planned relief date, the allowance for delayed relief, and the process for early sign-off due to compassionate reasons. It also includes information on repatriation for the death or serious illness of an immediate family member, including the Company's responsibility to arrange repatriation and the time frame for travel.",
+      "reason": "The excerpts contain specific details about relief and travel arrangements, including sign-off procedures, repatriation for family emergencies, and travel arrangements for seafarers. These details directly support answering questions on the topic of relief and travel arrangements. | downgraded: evidence quote not found verbatim in the excerpts"
+    },
+    {
+      "topic": "pension contributions",
+      "verdict": "unsupported",
+      "evidence_quote": "",
+      "reason": "The provided excerpts do not contain any information related to pension contributions. They discuss leave policies and related matters, but do not mention anything about pension contributions."
+    }
+  ]
+}

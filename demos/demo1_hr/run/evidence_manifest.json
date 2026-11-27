@@ -1,0 +1,260 @@
+{
+  "folder": "demos/demo1_hr/docs",
+  "files": [
+    {
+      "filename": "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 2887,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 1404,
+          "headings": [
+            "1. Scope",
+            "2. Tour Lengths and Rotation",
+            "3. Leave Accrual for Seafarers"
+          ],
+          "preview": "CRT-03 Crew Leave, Rotation and Travel Policy - fictional document for demonstration Page 1 CRT-03 Crew Leave, Rotation and Travel Policy Bluewater Fleet Manage"
+        },
+        {
+          "page": 2,
+          "n_chars": 1482,
+          "headings": [
+            "4. Relief and Sign-Off",
+            "5. Repatriation and Travel",
+            "6. Medical Fitness on Joining"
+          ],
+          "preview": "CRT-03 Crew Leave, Rotation and Travel Policy - fictional document for demonstration Page 2 4. Relief and Sign-Off The Crewing Department will give each seafare"
+        }
+      ],
+      "sections": [
+        "1. Scope",
+        "2. Tour Lengths and Rotation",
+        "3. Leave Accrual for Seafarers",
+        "4. Relief and Sign-Off",
+        "5. Repatriation and Travel",
+        "6. Medical Fitness on Joining"
+      ],
+      "columns": [],
+      "key_entities": [
+        "CRT-03",
+        "HRP-01",
+        "CRT",
+        "Rotation and Travel",
+        "MLC",
+        "USD",
+        "Director of\nCrewing",
+        "HRP",
+        "Lengths and Rotation",
+        "Accrual for Seafarers",
+        "Relief and Sign",
+        "Repatriation and Travel",
+        "Masters and Chief"
+      ],
+      "numbers_with_units": [
+        "USD 25",
+        "USD 40",
+        "1 month",
+        "11 months",
+        "3 months",
+        "4 months",
+        "2 months",
+        "5 months",
+        "6 months",
+        "2.5 calendar days",
+        "8\ncalendar days",
+        "30 days",
+        "14 days",
+        "72 hours",
+        "8\nhours",
+        "12 hours",
+        "10 kg",
+        "3\nmonths"
+      ],
+      "title": "CRT-03 Crew Leave, Rotation and Travel Policy - fictional document for demonstration",
+      "warnings": []
+    },
+    {
+      "filename": "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 2999,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 1607,
+          "headings": [
+            "1. Purpose",
+            "2. Eligibility for Shore Leave",
+            "3. Return on Board"
+          ],
+          "preview": "CSL-02 Crew Shore Leave and Port Conduct Policy - fictional document for demonstration Page 1 CSL-02 Crew Shore Leave and Port Conduct Policy Bluewater Fleet Ma"
+        },
+        {
+          "page": 2,
+          "n_chars": 1391,
+          "headings": [
+            "4. Security Levels and High-Risk Ports",
+            "5. Documents and Conduct Ashore",
+            "6. Shore Leave Denied"
+          ],
+          "preview": "CSL-02 Crew Shore Leave and Port Conduct Policy - fictional document for demonstration Page 2 4. Security Levels and High-Risk Ports When the port facility is a"
+        }
+      ],
+      "sections": [
+        "1. Purpose",
+        "2. Eligibility for Shore Leave",
+        "3. Return on Board",
+        "4. Security Levels and High-Risk Ports",
+        "5. Documents and Conduct Ashore",
+        "6. Shore Leave Denied"
+      ],
+      "columns": [],
+      "key_entities": [
+        "CSL-02",
+        "CRT-03",
+        "CSL",
+        "Leave and Port",
+        "ISPS",
+        "Director of\nCrewing",
+        "Eligibility for Shore",
+        "IMO",
+        "Levels and High",
+        "Documents and Conduct",
+        "CRT"
+      ],
+      "numbers_with_units": [
+        "8 hours",
+        "2 hours",
+        "4 hours",
+        "24 hours"
+      ],
+      "title": "CSL-02 Crew Shore Leave and Port Conduct Policy - fictional document for demonstration",
+      "warnings": []
+    },
+    {
+      "filename": "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 4029,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 2307,
+          "headings": [
+            "1. Purpose and Scope",
+            "2. Annual Leave Entitlement",
+            "3. Requesting Annual Leave",
+            "4. Carry-Over and Encashment"
+          ],
+          "preview": "HRP-01 Shore Staff Leave Policy - fictional document for demonstration Page 1 HRP-01 Shore Staff Leave Policy Bluewater Fleet Management Pte. Ltd. | Human Resou"
+        },
+        {
+          "page": 2,
+          "n_chars": 1721,
+          "headings": [
+            "5. Sick Leave",
+            "6. Parental Leave",
+            "7. Compassionate and Other Leave",
+            "8. Public Holidays"
+          ],
+          "preview": "HRP-01 Shore Staff Leave Policy - fictional document for demonstration Page 2 5. Sick Leave Shore staff are entitled to 14 calendar days of paid outpatient sick"
+        }
+      ],
+      "sections": [
+        "1. Purpose and Scope",
+        "2. Annual Leave Entitlement",
+        "3. Requesting Annual Leave",
+        "4. Carry-Over and Encashment",
+        "5. Sick Leave",
+        "6. Parental Leave",
+        "7. Compassionate and Other Leave",
+        "8. Public Holidays"
+      ],
+      "columns": [],
+      "key_entities": [
+        "HRP-01",
+        "CRT-03",
+        "HRP",
+        "Purpose and Scope",
+        "Rotterdam and Mumbai",
+        "Rotation and Travel",
+        "CRT",
+        "Head of Department",
+        "Over and Encashment",
+        "Compassionate and Other"
+      ],
+      "numbers_with_units": [
+        "24 working days",
+        "5 years",
+        "30 working days",
+        "2 working days",
+        "2.5 working days",
+        "15 working days",
+        "20 working days",
+        "14 calendar days",
+        "5 working days",
+        "30 calendar days",
+        "60\ncalendar days",
+        "14 days",
+        "16 weeks",
+        "6 months",
+        "4\nweeks",
+        "10 working days",
+        "12 weeks",
+        "8 weeks",
+        "3 working days"
+      ],
+      "title": "HRP-01 Shore Staff Leave Policy - fictional document for demonstration",
+      "warnings": []
+    }
+  ],
+  "corpus_key_terms": [
+    "leave",
+    "days",
+    "working",
+    "shore",
+    "paid",
+    "months",
+    "annual",
+    "travel",
+    "calendar",
+    "crew",
+    "board",
+    "staff",
+    "port",
+    "year",
+    "seafarer",
+    "hours",
+    "tour",
+    "company",
+    "day",
+    "least",
+    "repatriation",
+    "vessel",
+    "employees",
+    "weeks",
+    "crewing",
+    "seafarers",
+    "rotation",
+    "sign-off",
+    "standard",
+    "month",
+    "master",
+    "date",
+    "medical",
+    "conduct",
+    "return",
+    "security",
+    "local",
+    "taken",
+    "public",
+    "fictional"
+  ],
+  "total_chars": 9915,
+  "warnings": []
+}

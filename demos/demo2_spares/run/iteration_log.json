@@ -1,0 +1,205 @@
+[
+  {
+    "iteration": 0,
+    "agent_version": 0,
+    "score_before": 0.6686,
+    "score_after": 0.6686,
+    "pass_rate_before": 0.542,
+    "pass_rate_after": 0.542,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 9,
+      "WRONG_REFUSAL": 1,
+      "HALLUCINATION": 1
+    },
+    "patches": [],
+    "decision": "baseline",
+    "stop_reason": "",
+    "tokens_used": 134331,
+    "seconds_used": 194.8
+  },
+  {
+    "iteration": 1,
+    "agent_version": 1,
+    "score_before": 0.6686,
+    "score_after": 0.6298,
+    "pass_rate_before": 0.542,
+    "pass_rate_after": 0.5,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 8,
+      "WRONG_REFUSAL": 2,
+      "HALLUCINATION": 2
+    },
+    "patches": [
+      {
+        "target": "PROMPT_DEFECT",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [],
+        "after": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide valid citations or references to support the given information."
+        ],
+        "rationale": "9 PROMPT_DEFECT failures; added 2 llm rule(s)",
+        "addresses_cases": [
+          "S-02",
+          "S-03",
+          "S-05",
+          "M-01",
+          "M-04",
+          "M-05",
+          "E-01",
+          "E-03",
+          "E-05"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide valid citations or references to support the given information."
+        ],
+        "after": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide valid citations or references to support the given information.",
+          "Ensure all answers are derived from the provided documents, even if they are not explicitly stated.",
+          "Refer to the documents for context and answer all implicit questions within the given context."
+        ],
+        "rationale": "1 WRONG_REFUSAL failures; added 2 llm rule(s)",
+        "addresses_cases": [
+          "M-02"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "contract",
+        "field": "output_contract.refusal_policy",
+        "before": "Refuse when the retrieved context does not contain the answer, or when the question is in a must-refuse topic. Never answer from general knowledge. Known gaps: freight rates.",
+        "after": "Refuse when the retrieved context does not contain the answer, or when the question is in a must-refuse topic. Never answer from general knowledge. Known gaps: freight rates. Partial information is not a reason to refuse: answer what the passages state and name what is missing.",
+        "rationale": "agent refused despite relevant retrieved evidence",
+        "addresses_cases": [
+          "M-02"
+        ]
+      }
+    ],
+    "decision": "reverted",
+    "stop_reason": "overall regressed by 0.039; patch reverted, will try a different patch",
+    "tokens_used": 76963,
+    "seconds_used": 77.1
+  },
+  {
+    "iteration": 2,
+    "agent_version": 2,
+    "score_before": 0.6686,
+    "score_after": 0.633,
+    "pass_rate_before": 0.542,
+    "pass_rate_after": 0.5,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 9,
+      "WRONG_REFUSAL": 2,
+      "HALLUCINATION": 1
+    },
+    "patches": [
+      {
+        "target": "PROMPT_DEFECT",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [],
+        "after": [
+          "End every sentence that states a fact with the citation label of its passage, copied exactly from the passage header, e.g. [policy.pdf p.2]."
+        ],
+        "rationale": "9 PROMPT_DEFECT failures; added 1 canned rule(s)",
+        "addresses_cases": [
+          "S-02",
+          "S-03",
+          "S-05",
+          "M-01",
+          "M-04",
+          "M-05",
+          "E-01",
+          "E-03",
+          "E-05"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [
+          "End every sentence that states a fact with the citation label of its passage, copied exactly from the passage header, e.g. [policy.pdf p.2]."
+        ],
+        "after": [
+          "End every sentence that states a fact with the citation label of its passage, copied exactly from the passage header, e.g. [policy.pdf p.2].",
+          "Ensure the assistant references specific passages to support their answers, even when they seem to contain the answer.",
+          "Clarify the answer by referencing the exact context or passage that provides the information, even if it's not explicitly stated."
+        ],
+        "rationale": "1 WRONG_REFUSAL failures; added 2 llm rule(s)",
+        "addresses_cases": [
+          "M-02"
+        ]
+      }
+    ],
+    "decision": "reverted",
+    "stop_reason": "overall regressed by 0.036; patch reverted, will try a different patch",
+    "tokens_used": 70767,
+    "seconds_used": 80.1
+  },
+  {
+    "iteration": 3,
+    "agent_version": 3,
+    "score_before": 0.6686,
+    "score_after": 0.6738,
+    "pass_rate_before": 0.542,
+    "pass_rate_after": 0.542,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 9,
+      "WRONG_REFUSAL": 1,
+      "HALLUCINATION": 1
+    },
+    "patches": [
+      {
+        "target": "PROMPT_DEFECT",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [],
+        "after": [
+          "State every number, duration, amount and identifier from the relevant passage explicitly in the answer, and when two passages are relevant combine both, citing each."
+        ],
+        "rationale": "9 PROMPT_DEFECT failures; added 1 canned rule(s)",
+        "addresses_cases": [
+          "S-02",
+          "S-03",
+          "S-05",
+          "M-01",
+          "M-04",
+          "M-05",
+          "E-01",
+          "E-03",
+          "E-05"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [
+          "State every number, duration, amount and identifier from the relevant passage explicitly in the answer, and when two passages are relevant combine both, citing each."
+        ],
+        "after": [
+          "State every number, duration, amount and identifier from the relevant passage explicitly in the answer, and when two passages are relevant combine both, citing each.",
+          "When answering, ensure all relevant information is extracted from the documents, even if it requires synthesis of data from multiple sources, and do not refuse unless explicitly instructed to do so.",
+          "If the answer is not found directly, synthesize the information from the available data to provide a comprehensive response."
+        ],
+        "rationale": "1 WRONG_REFUSAL failures; added 2 llm rule(s)",
+        "addresses_cases": [
+          "M-02"
+        ]
+      }
+    ],
+    "decision": "kept",
+    "stop_reason": "early stop: gain +0.005 below min_gain 0.02",
+    "tokens_used": 74503,
+    "seconds_used": 103.4
+  }
+]

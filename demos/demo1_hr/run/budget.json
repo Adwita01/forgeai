@@ -1,0 +1,73 @@
+{
+  "tokens_used": 164059,
+  "elapsed_s": 452.2,
+  "max_tokens": 0,
+  "max_seconds": 14400.0,
+  "stages": {
+    "agent_answer": {
+      "calls": 44,
+      "prompt_tokens": 86730,
+      "completion_tokens": 3839,
+      "seconds": 89.1,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "embed": {
+      "calls": 53,
+      "prompt_tokens": 6888,
+      "completion_tokens": 0,
+      "seconds": 33.9,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "eval_gen": {
+      "calls": 32,
+      "prompt_tokens": 13270,
+      "completion_tokens": 3813,
+      "seconds": 65.8,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "generator": {
+      "calls": 1,
+      "prompt_tokens": 1002,
+      "completion_tokens": 202,
+      "seconds": 4.3,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "groundability": {
+      "calls": 7,
+      "prompt_tokens": 6127,
+      "completion_tokens": 987,
+      "seconds": 18.7,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "interviewer": {
+      "calls": 2,
+      "prompt_tokens": 2450,
+      "completion_tokens": 1027,
+      "seconds": 138.5,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "judge": {
+      "calls": 21,
+      "prompt_tokens": 31636,
+      "completion_tokens": 5103,
+      "seconds": 99.0,
+      "schema_retries": 0,
+      "hard_failures": 0
+    },
+    "optimizer": {
+      "calls": 2,
+      "prompt_tokens": 874,
+      "completion_tokens": 111,
+      "seconds": 2.1,
+      "schema_retries": 0,
+      "hard_failures": 0
+    }
+  },
+  "wall_clock_s": 452.2
+}

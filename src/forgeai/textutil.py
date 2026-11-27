@@ -30,7 +30,9 @@ def numbers(s: str) -> set[str]:
 
 
 def content_tokens(s: str) -> set[str]:
-    return {t for t in re.findall(r"[a-z0-9][a-z0-9\-.]*", norm(s)) if t not in STOPWORDS and len(t) > 1}
+    # strip sentence punctuation: "singapore." must match "singapore" (internal dots/hyphens are kept: "p.2", "6s50me-c")
+    toks = (t.rstrip(".-") for t in re.findall(r"[a-z0-9][a-z0-9\-.]*", norm(s)))
+    return {t for t in toks if t not in STOPWORDS and len(t) > 1}
 
 
 def overlap(needle: str, haystack: str) -> float:
@@ -53,8 +55,18 @@ def quote_in(quote: str, source: str, min_len: int = 8) -> bool:
     return len(q) >= 25 and overlap(q, src) >= 0.9 and numbers(quote) <= numbers(source)
 
 
+_FIELD = re.compile(r"^\s*([a-z][a-z0-9_ ]{1,30}):\s*(.+)$", re.I)
+
+
 def fact_supported(fact: str, text: str) -> bool:
-    """Deterministic: all numbers in the fact appear in the text, and most content words do."""
+    """Deterministic: all numbers in the fact appear in the text, and most content words do.
+
+    A catalogue-style fact "min_stock: 6" is matched on its value ("6"), since a correct answer says
+    "the minimum stock is 6", not "min_stock: 6".
+    """
+    m = _FIELD.match(fact)
+    if m and ("_" in m.group(1) or len(m.group(1).split()) == 1) and fact not in text:
+        return fact_supported(m.group(2), text)
     nf = numbers(fact)
     if nf and not nf <= numbers(text):
         return False

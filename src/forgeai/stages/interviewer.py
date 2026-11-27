@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Callable, Literal, Optional
 
-from ..llm import LLM, LLMError, load_prompt, split_prompt
+from ..llm import FALLBACK_ERRORS, LLM, LLMError, load_prompt, split_prompt
 from ..manifest import manifest_for_prompt
 from ..schemas import QA, ClarifyingQuestion, ClarifyingQuestions, EvidenceManifest, Requirements
 
@@ -29,7 +29,7 @@ def ask_questions(llm: LLM, brief: str, manifest: EvidenceManifest) -> tuple[lis
         qs = [q for q in qs if q.question.strip()][:5]
         if qs:
             return qs, "llm"
-    except LLMError:
+    except FALLBACK_ERRORS:
         pass
     return list(_FALLBACK_QUESTIONS), "fallback"
 
@@ -41,9 +41,18 @@ def _lookup_answer(q: ClarifyingQuestion, idx: int, answers: object) -> Optional
         if str(idx + 1) in answers:
             return str(answers[str(idx + 1)])
         ql = q.question.lower()
-        for k, v in answers.items():  # keyword match: {"audience": "...", "refuse": "..."}
-            if k.lower() in ql:
-                return str(v)
+        # keyword match {"tone": "...", "refuse|exclude": "..."}: the key whose keyword appears EARLIEST in the
+        # question wins - a question's subject comes first ("What tone ... for the audience?" -> tone)
+        best: tuple[int, str] | None = None
+        for k, v in answers.items():
+            if k in ("default",) or k.isdigit():
+                continue
+            for alt in k.lower().split("|"):
+                pos = ql.find(alt.strip())
+                if alt.strip() and pos >= 0 and (best is None or pos < best[0]):
+                    best = (pos, str(v))
+        if best:
+            return best[1]
         if "default" in answers:
             return str(answers["default"])
     return None
@@ -147,16 +156,49 @@ def draft_requirements(llm: LLM, brief: str, qa: list[QA], manifest: EvidenceMan
     sys_t, user_t = split_prompt(load_prompt("interviewer_requirements", llm.s, brief=brief, qa=qa_txt, manifest=manifest_for_prompt(manifest)))
     try:
         req, how = llm.structured(Requirements, sys_t, user_t, stage="interviewer", max_tokens=1200), "llm"
-    except LLMError:
+    except FALLBACK_ERRORS:
         req, how = _fallback_requirements(brief, manifest), "fallback"
     if not req.must_answer_topics:
         req.must_answer_topics = _fallback_requirements(brief, manifest).must_answer_topics
     req.must_answer_topics = list(dict.fromkeys(t.strip() for t in req.must_answer_topics if t.strip()))[:10]
+    # a must-answer topic has to come from the requester: drop any that shares no word with the brief/answers
+    # (small models copy prompt examples - an HR agent once acquired "part number lookup")
+    req_text = " ".join([brief] + [x.answer for x in qa if x.source != "auto_default"])
+    kept, dropped = [], []
+    for t in req.must_answer_topics:
+        t = re.sub(r"\s+(lookups?|queries|questions|information|details)$", "", t, flags=re.I).strip() or t
+        (kept if _shares_word(t, req_text) else dropped).append(t)
+    if kept:
+        req.must_answer_topics = list(dict.fromkeys(kept))
+        if dropped:
+            req.assumptions.append(f"dropped must-answer topic(s) not mentioned by the requester: {', '.join(dropped)}")
     # small models sometimes turn interview meta-questions into "topics" (e.g. "ambiguous terms")
     meta = re.compile(r"^(ambiguous|unclear|vague|none|n/?a|no specific|other)\b", re.I)
     req.must_refuse_topics = list(dict.fromkeys(t.strip() for t in req.must_refuse_topics if t.strip() and not meta.match(t.strip())))[:8]
     req.clarifications = qa
+    # provenance is set by the pipeline, never by the model (it likes to claim "user")
+    req.approved_by = "auto"
+    if req.agent_name.strip().lower() in ("", "document assistant", "assistant", "ai assistant"):
+        req.agent_name = _derive_name(brief, req.scope)
     return reconcile_capabilities(req, brief, qa, manifest), how
+
+
+def _shares_word(topic: str, text: str) -> bool:
+    """Prefix-stem match (warranty ~ warranties), ignoring stopwords."""
+    from ..textutil import content_tokens
+    def stem(w: str) -> str:
+        return (w[:-1] if w.endswith("s") and len(w) > 3 else w)[:5]
+    words = {stem(w) for w in content_tokens(text) if len(w) > 2}
+    return any(stem(w) in words for w in content_tokens(topic) if len(w) > 2)
+
+
+def _derive_name(brief: str, scope: str) -> str:
+    """Deterministic fallback name '<Organisation> <Subject> Assistant' when the model gives a generic one."""
+    text = f"{scope} {brief}"
+    org = re.search(r"\b(?:for|at)\s+((?:[A-Z][\w&.-]+\s?){1,4})", text)
+    subj = re.search(r"\b(HR|procurement|spares|parts|benefits|leave|safety|IT)\b", text, re.I)
+    name = " ".join(x for x in [org.group(1).strip() if org else "", (subj.group(1).upper() if subj and subj.group(1).lower() in ("hr", "it") else (subj.group(1).title() if subj else "Policy"))] if x)
+    return f"{name} Assistant"
 
 
 def load_answers(path: Optional[str | Path]) -> object:

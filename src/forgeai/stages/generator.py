@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 from statistics import mean
 
-from ..llm import LLM, LLMError, load_prompt, split_prompt
+from ..llm import FALLBACK_ERRORS, LLM, LLMError, load_prompt, split_prompt
 from ..manifest import manifest_for_prompt
 from ..retriever import tokenize
 from ..schemas import (
@@ -51,7 +51,8 @@ def retrieval_params(manifest: EvidenceManifest) -> tuple[RetrievalConfig, str]:
     notes = []
     if ids >= 5 or has_csv:
         alpha = 0.35
-        notes.append("identifier-heavy / tabular corpus -> more BM25 weight (alpha 0.35)")
+        why = "tabular (CSV) corpus" if has_csv else f"{ids} code-like identifiers (clause/document ids)"
+        notes.append(f"{why} -> more BM25 weight (alpha 0.35)")
     chunk = 160 if avg_unit < 2500 else 220
     notes.append(f"avg citable unit {avg_unit:.0f} chars -> chunk {chunk} words")
     n_units = sum(max(1, f.n_pages) for f in prose) + sum(f.n_rows for f in manifest.files if f.kind == "csv")
@@ -104,7 +105,7 @@ def build_persona(llm: LLM, req: Requirements, manifest: EvidenceManifest) -> tu
         if len(p.role_statement) < 15:
             raise LLMError("persona too short")
         return p, "llm"
-    except LLMError:
+    except FALLBACK_ERRORS:
         return _fallback_persona(req), "fallback"
 
 

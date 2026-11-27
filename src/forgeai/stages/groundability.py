@@ -10,10 +10,34 @@ so the generated agent is told about the gap instead of hallucinating over it.
 """
 from __future__ import annotations
 
-from ..llm import LLM, LLMError, load_prompt, split_prompt
+from ..llm import FALLBACK_ERRORS, LLM, LLMError, load_prompt, split_prompt
 from ..retriever import HybridRetriever, tokenize
 from ..schemas import GapFlag, Requirements, TopicVerdict
-from ..textutil import overlap, quote_in
+from ..textutil import content_tokens, overlap, quote_in
+
+# words that describe the task, not the content - "part number lookup" needs no document to say "lookup"
+_TASK_WORDS = {"lookup", "lookups", "look", "check", "checks", "find", "search", "query", "queries", "question", "questions",
+               "information", "info", "details", "general", "overview", "calculation", "calculations", "calculate", "current"}
+
+
+def _stems(text: str) -> set[str]:
+    return {t[:5] for t in content_tokens(text) if len(t) > 2 and not t[0].isdigit() and t not in _TASK_WORDS}
+
+
+def _corpus_tokens(retriever: HybridRetriever) -> set[str]:
+    toks = getattr(retriever, "_forge_corpus_tokens", None)
+    if toks is None:
+        toks = set()
+        for c in retriever.chunks:
+            toks |= content_tokens(c.text)
+        retriever._forge_corpus_tokens = toks
+    return toks
+
+
+def missing_topic_words(topic: str, retriever: HybridRetriever) -> set[str]:
+    """Topic word stems that occur nowhere in the corpus (prefix match, so warranty ~ warranted)."""
+    toks = _corpus_tokens(retriever)
+    return {s for s in _stems(topic) if not any(t.startswith(s) for t in toks)}
 
 
 def check_topic(llm: LLM, retriever: HybridRetriever, topic: str) -> tuple[TopicVerdict, str]:
@@ -32,7 +56,7 @@ def check_topic(llm: LLM, retriever: HybridRetriever, topic: str) -> tuple[Topic
     try:
         v = llm.structured(TopicVerdict, sys_t, user_t, stage="groundability", max_tokens=400)
         v.topic = topic
-    except LLMError:
+    except FALLBACK_ERRORS:
         verdict = "supported" if lexical >= 0.6 else "partial" if lexical >= 0.3 else "unsupported"
         return TopicVerdict(topic=topic, verdict=verdict, reason=f"LLM unavailable; lexical coverage {lexical:.2f}"), best
 
@@ -43,6 +67,17 @@ def check_topic(llm: LLM, retriever: HybridRetriever, topic: str) -> tuple[Topic
     if v.verdict == "supported" and not v.evidence_quote and overlap(topic, joined) < 0.5:
         v.verdict = "partial"
         v.reason = (v.reason + " | downgraded: no evidence quote and weak lexical overlap").strip(" |")
+    # A small model will "support" a topic with any verbatim line (e.g. a document title). If a content
+    # word of the topic never occurs anywhere in the corpus ("freight RATES" when the documents only
+    # discuss freight costs), the topic is not supported as asked: unrelated quote -> gap, related -> partial.
+    miss = missing_topic_words(topic, retriever)
+    if v.verdict in ("supported", "partial") and miss:
+        # only when NO topic word occurs anywhere can it be a synonym the embeddings matched ("vacation" vs "leave");
+        # a topic whose other words do occur but whose distinguishing word never does is simply not covered
+        possible_synonym = miss == _stems(topic) and retriever.dense_backend.startswith("embed")
+        v.verdict = "partial" if possible_synonym else "unsupported"
+        v.reason = (v.reason + f" | {'downgraded' if v.verdict == 'partial' else 'rejected'}: the documents never use "
+                    f"{', '.join(repr(m) for m in sorted(miss))}").strip(" |")
     if v.verdict == "unsupported" and lexical >= 0.8:
         v.verdict = "partial"  # the model is too strict sometimes; keep the topic, but caveat it
         v.reason = (v.reason + f" | upgraded to partial: all topic words occur in {best}").strip(" |")

@@ -19,7 +19,7 @@ for _s in (sys.stdout, sys.stderr):  # Windows consoles default to cp1252
         pass
 
 from .config import get_settings  # noqa: E402
-from .llm import LLM  # noqa: E402
+from .llm import LLM, BackendUnavailable  # noqa: E402
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="ForgeAI - the agent that builds agents.")
 con = Console()
@@ -40,7 +40,7 @@ def _check_backend(llm: LLM, strict: bool = False) -> None:
     h = llm.health()
     if not h.get("reachable"):
         con.print(f"[red]LLM endpoint {llm.s.base_url} unreachable:[/] {h.get('error')}")
-        con.print("Start Ollama (`ollama serve`) or set FORGE_BASE_URL. Stages will fall back to deterministic defaults.")
+        con.print("Start Ollama (open the app or run `ollama serve`) or set FORGE_BASE_URL.")
         if strict:
             raise typer.Exit(2)
     elif not h.get("model_available"):
@@ -82,15 +82,24 @@ def build(
     from .stages.interviewer import load_answers
 
     s = _settings(model, judge_model, max_tokens, max_seconds)
-    _check_backend(LLM(s))
+    _check_backend(LLM(s), strict=True)  # a build without a model would only produce a junk agent
     interactive = not non_interactive and sys.stdin.isatty()
     text = _read_brief(brief)
     con.print(Panel(text.strip(), title="Brief", subtitle=f"docs: {docs}  mode: {'interactive' if interactive else 'unattended'}"))
-    res = run_build(BuildOptions(
-        brief=text, docs=docs, out=out, mode="interactive" if interactive else "auto", answers=load_answers(answers),
-        approve=approve, max_iters=max_iters, max_cases=max_cases, reuse_eval_set=reuse_eval_set, use_cache=not no_cache, settings=s,
-        log=lambda m: con.print(m, markup=False, highlight=False),
-    ))
+    try:
+        res = run_build(BuildOptions(
+            brief=text, docs=docs, out=out, mode="interactive" if interactive else "auto", answers=load_answers(answers),
+            approve=approve, max_iters=max_iters, max_cases=max_cases, reuse_eval_set=reuse_eval_set, use_cache=not no_cache, settings=s,
+            log=lambda m: con.print(m, markup=False, highlight=False),
+        ))
+    except BackendUnavailable as e:
+        con.print(f"[bold red]Build aborted:[/] {escape(str(e))}")
+        con.print(f"Partial artifacts and run_status.json are in {out}. Fix the model server, then rerun the same command: "
+                  "completed LLM calls replay from .forge_cache.")
+        raise typer.Exit(2)
+    status = json.loads((out / "run_status.json").read_text(encoding="utf-8")).get("status", "complete")
+    if status != "complete":
+        con.print("[yellow]Run cut short by its budget - quality_report.md says what was completed.[/]")
     rows = []
     for h in res.history:
         sc = next((x for x in res.scorecards if x.iteration == h.iteration), None)

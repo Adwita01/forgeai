@@ -1,0 +1,57 @@
+{
+  "questions": [
+    {
+      "question": "What is the target tone for the assistant? Should it be formal, technical, or something else?",
+      "why": "The brief mentions technical superintendents and chief engineers as the audience. The tone should align with their professional expectations.",
+      "default_answer": "Technical and formal, suitable for technical discussions and professional settings."
+    },
+    {
+      "question": "Are there any specific topics in the brief that are not covered by the manifest documents? Should the assistant refuse to handle them?",
+      "why": "The manifest documents cover warranty, claims, and delivery service levels, but the brief mentions other topics like urgent and emergency orders and freight rates. Should the assistant handle these?",
+      "default_answer": "The assistant should refuse to handle topics like legal advice, personal cases, and topics outside the documents. Urgent and emergency orders and freight rates are not covered by the manifest and should be refused."
+    },
+    {
+      "question": "Do the answers need to include calculations, table lookups, today's date, or live data? For example, the assistant should calculate the total cost of an order and provide today's date for purchase order approvals.",
+      "why": "The manifest documents mention price, stock on hand, lead time, and supplier information. The assistant should be able to calculate the total cost of an order and provide today's date for purchase order approvals.",
+      "default_answer": "The assistant should be able to calculate the total cost of an order and provide today's date for purchase order approvals. It should also be able to look up today's date for purchase order approvals."
+    },
+    {
+      "question": "What specific data or calculations should the assistant be able to perform? For example, the assistant should be able to calculate the total cost of an order, provide today's date for purchase order approvals, and look up today's date for purchase order approvals.",
+      "why": "The manifest documents mention price, stock on hand, lead time, and supplier information. The assistant should be able to calculate the total cost of an order and provide today's date for purchase order approvals.",
+      "default_answer": "The assistant should be able to calculate the total cost of an order, provide today's date for purchase order approvals, and look up today's date for purchase order approvals."
+    },
+    {
+      "question": "Are there any specific terms or conditions that should be refused? For example, the assistant should refuse to provide legal advice, handle personal cases, or discuss topics outside the documents.",
+      "why": "The manifest documents mention warranty, claims, and delivery service levels. The assistant should refuse to handle topics like legal advice, personal cases, and topics outside the documents.",
+      "default_answer": "The assistant should refuse to provide legal advice, handle personal cases, or discuss topics outside the documents. The assistant should also refuse to handle topics like legal advice, personal cases, and topics outside the documents."
+    }
+  ],
+  "answers": [
+    {
+      "question": "What is the target tone for the assistant? Should it be formal, technical, or something else?",
+      "answer": "Brief and exact. Give part numbers, figures and the approving role; no small talk.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any specific topics in the brief that are not covered by the manifest documents? Should the assistant refuse to handle them?",
+      "answer": "Market prices or freight rates not in our documents, technical repair advice, legal interpretation of contracts, and suppliers other than Kestrel and Halcyon.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Do the answers need to include calculations, table lookups, today's date, or live data? For example, the assistant should calculate the total cost of an order and provide today's date for purchase order approvals.",
+      "answer": "Yes - it must calculate order totals from catalogue unit prices and quantities, including surcharges, using exact arithmetic.",
+      "source": "answers_file"
+    },
+    {
+      "question": "What specific data or calculations should the assistant be able to perform? For example, the assistant should be able to calculate the total cost of an order, provide today's date for purchase order approvals, and look up today's date for purchase order approvals.",
+      "answer": "Yes - it must calculate order totals from catalogue unit prices and quantities, including surcharges, using exact arithmetic.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any specific terms or conditions that should be refused? For example, the assistant should refuse to provide legal advice, handle personal cases, or discuss topics outside the documents.",
+      "answer": "Market prices or freight rates not in our documents, technical repair advice, legal interpretation of contracts, and suppliers other than Kestrel and Halcyon.",
+      "source": "answers_file"
+    }
+  ],
+  "source": "llm"
+}

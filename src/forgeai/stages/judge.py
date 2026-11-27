@@ -20,6 +20,7 @@ import re
 from typing import Callable, Optional
 
 from ..agent_runtime import Agent, chunk_label
+from ..budget import BudgetExceeded
 from ..llm import LLM, LLMError, load_prompt, split_prompt
 from ..schemas import (
     AgentResponse,
@@ -38,6 +39,21 @@ _LOC = re.compile(r"^\[(.+?\.(?:pdf|csv|txt|md|markdown))\s+(p\.\s*(\d+)|row\s*(
 
 PASS_FACTUALITY = 0.5
 PASS_GROUNDEDNESS = 0.6
+
+
+_LOOSE = re.compile(r"^\[(.+?)\s+(p\.\s*\d+|row\s*\d+|§\s*.+)\]$", re.I)
+
+
+def canonical_citation(c: str, manifest: EvidenceManifest) -> str:
+    """Resolve a document code ("[CRT-03 p.2]") to its file when exactly one manifest file starts with it."""
+    if _LOC.match(c.strip()):
+        return c
+    m = _LOOSE.match(c.strip())
+    if not m:
+        return c
+    name = m.group(1).strip().lower()
+    hits = [f.filename for f in manifest.files if f.filename.lower().startswith(name) and len(name) >= 3]
+    return f"[{hits[0]} {m.group(2)}]" if len(hits) == 1 else c
 
 
 def validate_citation(c: str, manifest: EvidenceManifest) -> tuple[bool, str]:
@@ -65,11 +81,43 @@ def _cited_file(c: str) -> str:
     return m.group(1).lower() if m else ""
 
 
-def _deterministic_groundedness(answer: str, evidence: str) -> float:
+_QWORD = re.compile(r"^\s*(what|how|when|where|which|who|why|can|could|is|are|does|do|should)\b", re.I)
+
+
+def _is_restated_question(claim: str, question: str) -> bool:
+    """The small judge sometimes lists the question itself as a 'claim'."""
+    return claim.strip().endswith("?") or (bool(_QWORD.match(claim)) and overlap(claim, question) >= 0.7)
+
+
+def _derivable(n: str, pool: set[str]) -> bool:
+    """Is n a one-step result (a*b, a+b, a-b, a/b) of two numbers from the pool? Covers order totals."""
+    try:
+        target = float(n)
+        vals = [float(x) for x in list(pool)[:80]]
+    except ValueError:
+        return False
+    for i, a in enumerate(vals):
+        for b in vals[i:]:
+            for r in (a * b, a + b, abs(a - b), a / b if b else None, b / a if a else None):
+                if r is not None and abs(r - target) <= max(0.005, abs(target) * 1e-6):
+                    return True
+    return False
+
+
+def _claim_supported(claim: str, evidence: str, question: str = "") -> bool:
+    """Deterministic check: the claim's numbers occur in the evidence (or follow from it in one arithmetic
+    step, e.g. 4 x 2380 = 9520), and most of its words occur in the evidence or the question."""
+    pool = numbers(evidence) | numbers(question)  # quantities the user supplied may be restated
+    if not all(x in pool or _derivable(x, pool) for x in numbers(claim)):
+        return False
+    return overlap(claim, evidence + "\n" + question) >= 0.6
+
+
+def _deterministic_groundedness(answer: str, evidence: str, question: str = "") -> float:
     sents = [s for s in re.split(r"(?<=[.!?])\s+", re.sub(r"\[[^\]]*\]", "", answer)) if len(content_tokens(s)) >= 3]
     if not sents:
         return 0.0
-    ok = sum(1 for s in sents if overlap(s, evidence) >= 0.6 and numbers(s) <= numbers(evidence))
+    ok = sum(1 for s in sents if _claim_supported(s, evidence, question))
     return ok / len(sents)
 
 
@@ -80,7 +128,11 @@ class Judge:
         self.require_citations = require_citations
 
     def score(self, case: EvalCase, resp: AgentResponse) -> CaseResult:
-        cites = resp.citations
+        # "[calculator]" style references point at a tool result, not a document: not validated against the
+        # manifest, but only tolerated for tools the agent actually called
+        called = {t.tool.lower() for t in resp.tool_results if t.error is None}
+        cites = [canonical_citation(c, self.manifest) for c in resp.citations
+                 if re.sub(r"^\[|\].*$|\s.*$", "", c.strip()).lower() not in called]
         checks = [(c, *validate_citation(c, self.manifest)) for c in cites]
         invalid = [f"{c} ({why})" for c, ok, why in checks if not ok]
         valid_files = {_cited_file(c) for c, ok, _ in checks if ok}
@@ -105,7 +157,7 @@ class Judge:
                 numeric_ok = fact_nums <= numbers(resp.answer)
             if should_refuse:
                 # answering an out-of-scope question fails regardless of content - no LLM call needed
-                groundedness = _deterministic_groundedness(resp.answer, evidence)
+                groundedness = _deterministic_groundedness(resp.answer, evidence, case.question)
                 factuality, detail = 0.0, {"judge_mode": "deterministic", "note": "answered a must-refuse question"}
             else:
                 det_facts = [fact_supported(f, resp.answer) for f in case.key_facts]
@@ -131,6 +183,7 @@ class Judge:
             expected_source_retrieved=exp_retrieved, expected_source_cited=exp_cited, numeric_ok=numeric_ok,
             groundedness=round(groundedness, 3), factuality=round(factuality, 3), refusal_accuracy=1.0 if refusal_ok else 0.0,
             passed=passed, judge_detail=detail, latency_s=resp.latency_s,
+            tools_called=[f"{t.tool}({t.args})" + (f" -> ERROR {t.error}" if t.error else "") for t in resp.tool_results],
         )
         if not passed:
             res.failure_category, res.failure_reason = classify_failure(case, res)
@@ -144,19 +197,21 @@ class Judge:
             ex = self.llm.structured(JudgeExtraction, sys_t, user_t, stage="judge", model=self.llm.s.judge_model,
                                      temperature=0.0, max_tokens=1200)
         except LLMError as e:
-            g = _deterministic_groundedness(resp.answer, evidence)
+            g = _deterministic_groundedness(resp.answer, evidence, case.question)
             f = sum(det_facts) / len(det_facts) if det_facts else g
             return g, f, {"judge_mode": "deterministic_fallback", "error": str(e)[:200]}
 
-        claims = [c for c in ex.claims if c.claim.strip()]
-        verified = [bool(c.quote) and quote_in(c.quote, evidence) for c in claims]
-        fabricated = sum(1 for c, v in zip(claims, verified) if c.quote and not v)
+        claims = [c for c in ex.claims if c.claim.strip() and not _is_restated_question(c.claim, case.question)]
+        quoted = [bool(c.quote) and quote_in(c.quote, evidence) for c in claims]
+        fabricated = sum(1 for c, q in zip(claims, quoted) if c.quote and not q)
+        # A rejected quote does not prove the claim false - the 3B judge often quotes the wrong line.
+        # Re-check the claim itself deterministically (numbers exact, >=60% word overlap); counted separately.
+        rescued = [not q and _claim_supported(c.claim, evidence, case.question) for c, q in zip(claims, quoted)]
+        verified = [q or r for q, r in zip(quoted, rescued)]
         if claims:
             groundedness = sum(verified) / len(claims)
         else:
-            groundedness = _deterministic_groundedness(resp.answer, evidence)
-        # deterministic sentence-level support can rescue claims the small judge failed to quote
-        groundedness = max(groundedness, 0.5 * groundedness + 0.5 * _deterministic_groundedness(resp.answer, evidence))
+            groundedness = _deterministic_groundedness(resp.answer, evidence, case.question)
 
         llm_fact = {}
         for fc in ex.facts:
@@ -177,6 +232,7 @@ class Judge:
             "n_claims": len(claims),
             "verified_claims": sum(verified),
             "fabricated_quotes": fabricated,
+            "claims_rescued": sum(rescued),
             "unsupported_claims": [c.claim for c, v in zip(claims, verified) if not v][:5],
             "facts": {f: hit for f, hit in zip(case.key_facts, fact_hits)},
         }
@@ -229,11 +285,18 @@ def scorecard(results: list[CaseResult], iteration: int, agent_version: int) -> 
 
 def run_eval(agent: Agent, judge: Judge, eval_set: EvalSet, iteration: int = 0,
              progress: Optional[Callable[[int, int, CaseResult], None]] = None) -> tuple[list[CaseResult], Scorecard]:
+    """Score every case. If the budget runs out mid-run, stop and score the completed cases only;
+    the scorecard is then marked complete=False so nobody compares it with a full run."""
     results = []
     for i, case in enumerate(eval_set.cases):
-        resp = agent.answer(case.question)
-        r = judge.score(case, resp)
+        try:
+            resp = agent.answer(case.question)
+            r = judge.score(case, resp)
+        except BudgetExceeded:
+            break
         results.append(r)
         if progress:
             progress(i + 1, len(eval_set.cases), r)
-    return results, scorecard(results, iteration, agent.d.version)
+    sc = scorecard(results, iteration, agent.d.version)
+    sc.n_planned, sc.complete = len(eval_set.cases), len(results) == len(eval_set.cases)
+    return results, sc

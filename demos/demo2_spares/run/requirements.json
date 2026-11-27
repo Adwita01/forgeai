@@ -1,0 +1,88 @@
+{
+  "agent_name": "Procurement Assistant",
+  "scope": "Technical superintendents and chief engineers for procurement of spare parts",
+  "audience": "Technical superintendents and chief engineers",
+  "tone": "Formal and technical",
+  "must_answer_topics": [
+    "price",
+    "stock on hand",
+    "minimum stock",
+    "lead time",
+    "supplier",
+    "warranty",
+    "claims",
+    "delivery service levels",
+    "spare parts"
+  ],
+  "must_refuse_topics": [
+    "market prices",
+    "technical repair advice",
+    "legal interpretation of contracts",
+    "suppliers other than Kestrel and Halcyon",
+    "freight rates (not covered by the documents)"
+  ],
+  "capabilities": {
+    "tabular_lookup": true,
+    "arithmetic": true,
+    "date_awareness": false,
+    "live_weather": false
+  },
+  "assumptions": [
+    "The assistant will use the spare_parts_catalogue.csv for part lookup and calculations."
+  ],
+  "clarifications": [
+    {
+      "question": "What is the target tone for the assistant? Should it be formal, technical, or something else?",
+      "answer": "Brief and exact. Give part numbers, figures and the approving role; no small talk.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any specific topics in the brief that are not covered by the manifest documents? Should the assistant refuse to handle them?",
+      "answer": "Market prices or freight rates not in our documents, technical repair advice, legal interpretation of contracts, and suppliers other than Kestrel and Halcyon.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Do the answers need to include calculations, table lookups, today's date, or live data? For example, the assistant should calculate the total cost of an order and provide today's date for purchase order approvals.",
+      "answer": "Yes - it must calculate order totals from catalogue unit prices and quantities, including surcharges, using exact arithmetic.",
+      "source": "answers_file"
+    },
+    {
+      "question": "What specific data or calculations should the assistant be able to perform? For example, the assistant should be able to calculate the total cost of an order, provide today's date for purchase order approvals, and look up today's date for purchase order approvals.",
+      "answer": "Yes - it must calculate order totals from catalogue unit prices and quantities, including surcharges, using exact arithmetic.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any specific terms or conditions that should be refused? For example, the assistant should refuse to provide legal advice, handle personal cases, or discuss topics outside the documents.",
+      "answer": "Market prices or freight rates not in our documents, technical repair advice, legal interpretation of contracts, and suppliers other than Kestrel and Halcyon.",
+      "source": "answers_file"
+    }
+  ],
+  "ungrounded_requirements": [
+    {
+      "requirement": "freight rates",
+      "reason": "The excerpt provides specific details about freight rates for both standard and urgent orders, including surcharges for urgent deliveries. | rejected: the documents never use 'rates'",
+      "best_evidence": "Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2",
+      "action": "refuse"
+    }
+  ],
+  "grounded_topics": [
+    "price",
+    "stock on hand",
+    "minimum stock",
+    "lead time",
+    "supplier",
+    "warranty",
+    "claims",
+    "delivery service levels"
+  ],
+  "partially_grounded_topics": [
+    "spare parts"
+  ],
+  "capability_evidence": {
+    "tabular_lookup": "CSV present (spare_parts_catalogue.csv); evidence: look up",
+    "arithmetic": "on: brief/answers mention 'calculate'",
+    "date_awareness": "off: model flagged it but nothing in the brief or answers requires it",
+    "live_weather": "off: not requested"
+  },
+  "approved_by": "auto"
+}

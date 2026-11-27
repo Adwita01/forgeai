@@ -1,0 +1,835 @@
+[
+  {
+    "case_id": "S-01",
+    "category": "single_doc",
+    "question": "What is the maximum travel per diem and for each night spent in a transit hotel, and for how long are medical fitness certificates required to be valid at the time of joining?",
+    "expected_behavior": "answer",
+    "answer": "The maximum travel per diem is USD 40 per day for each day of travel and for each night spent in a transit hotel. Medical fitness certificates must be valid for at least 3 months at the time of joining.",
+    "refused": false,
+    "citations": [
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 0.667,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "travel per diem of USD 40 per day": true,
+        "for each day of travel and for each night spent in a transit hotel": true,
+        "3 months' remaining validity": false
+      }
+    },
+    "latency_s": 2.12,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-02",
+    "category": "single_doc",
+    "question": "What are the conditions for shore leave in high-risk ports and what is the consequence of a seafarer returning on board with a blood alcohol concentration above 0.05%?",
+    "expected_behavior": "answer",
+    "answer": "In high-risk ports, shore leave is restricted to daylight hours (07:00 to 19:00 local) and crew must go ashore in groups of at least 2 (buddy system). A seafarer returning on board with a blood alcohol concentration above 0.05% results in immediate disembarkation. No alcohol may be consumed within 4 hours before a scheduled watch. Breach of the drug and alcohol policy results in immediate disembarkation.",
+    "refused": false,
+    "citations": [
+      "[CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "In ports listed as high-risk in the Company Port Advisory, a curfew of 22:00 local time applies and crew must carry the Company emergency contact card.": false,
+        "No seafarer may return on board with a blood alcohol concentration above 0.05%": true
+      }
+    },
+    "latency_s": 2.78,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-03",
+    "category": "single_doc",
+    "question": "What is the maximum number of working days of unused annual leave that can be carried over to the next calendar year?",
+    "expected_behavior": "answer",
+    "answer": "The maximum number of working days of unused annual leave that can be carried over to the next calendar year is up to 5 working days.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Up to 5 working days of unused annual leave may be carried over to the next calendar year and must be used by 31 March;": false
+      }
+    },
+    "latency_s": 1.65,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-04",
+    "category": "single_doc",
+    "question": "How many days' notice must the Crewing Department give for a planned relief, and what is the maximum delay allowed before a delay allowance is paid?",
+    "expected_behavior": "answer",
+    "answer": "The Crewing Department must give each seafarer at least 30 days' notice of the planned relief date. If a relief is delayed beyond the contract end date by more than 14 days, a delay allowance of USD 25 per day is paid.",
+    "refused": false,
+    "citations": [
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "The Crewing Department will give each seafarer at least 30 days' notice of the planned relief date.": true,
+        "If a relief is delayed beyond the contract end date by more than 14 days, a delay allowance of USD 25 per day is paid.": true
+      }
+    },
+    "latency_s": 1.89,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-05",
+    "category": "single_doc",
+    "question": "How many hours before a scheduled watch must alcohol consumption be avoided according to the document?",
+    "expected_behavior": "answer",
+    "answer": "According to the document, no alcohol may be consumed within 4 hours before a scheduled watch.",
+    "refused": false,
+    "citations": [
+      "[CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "a blood alcohol concentration above 0.05%": false
+      }
+    },
+    "latency_s": 1.51,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-06",
+    "category": "single_doc",
+    "question": "What is the maximum extension a seafarer can have on a standard tour length?",
+    "expected_behavior": "answer",
+    "answer": "A seafarer can have a standard tour length extended by up to 1 month by mutual agreement.",
+    "refused": false,
+    "citations": [
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "A tour may be extended by up to 1 month by mutual agreement": true
+      }
+    },
+    "latency_s": 1.52,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-07",
+    "category": "single_doc",
+    "question": "How many working days of compassionate leave are available for the death of an immediate family member and for other relatives?",
+    "expected_behavior": "answer",
+    "answer": "For the death of an immediate family member, shore staff are entitled to 5 working days of paid compassionate leave. For other relatives, the entitlement is 2 working days.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "5 working days of paid leave on the death of an immediate family member": true,
+        "2 working days for other relatives": true
+      }
+    },
+    "latency_s": 1.76,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-08",
+    "category": "single_doc",
+    "question": "How many days of paid leave do officers accrue per month on board if they have permanent contracts?",
+    "expected_behavior": "answer",
+    "answer": "Officers on permanent contracts accrue paid leave at 8 calendar days per month on board.",
+    "refused": false,
+    "citations": [
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Officers on permanent contracts accrue paid leave at 8 calendar days per month on board.": true
+      }
+    },
+    "latency_s": 1.53,
+    "tools_called": []
+  },
+  {
+    "case_id": "M-01",
+    "category": "multi_doc",
+    "question": "What is the combined tour length for a Chief Officer (rank group) who has completed 5 years of continuous service and is entitled to 30 working days of paid annual leave per calendar year, according to the HRP-01 and CRT-03 policies?",
+    "expected_behavior": "answer",
+    "answer": "According to the HRP-01 policy, a shore staff member with 5 years of continuous service is entitled to 30 working days of paid annual leave per calendar year. The CRT-03 policy does not provide specific tour lengths for shore staff, only for seafarers on board Company-managed vessels. Therefore, the combined tour length for a Chief Officer (rank group) who has completed 5 years of continuous service and is entitled to 30 working days of paid annual leave per calendar year is not provided in the given documents.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": false,
+    "numeric_ok": null,
+    "groundedness": 0.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 0.0,
+    "passed": false,
+    "failure_category": "WRONG_REFUSAL",
+    "failure_reason": "refused although the expected source was in the retrieved context",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 3.33,
+    "tools_called": []
+  },
+  {
+    "case_id": "M-02",
+    "category": "multi_doc",
+    "question": "How many calendar days of unused annual leave can be carried over to the next calendar year, and what happens to those days if not used by 31 March?",
+    "expected_behavior": "answer",
+    "answer": "Up to 5 working days of unused annual leave may be carried over to the next calendar year and must be used by 31 March; carried-over days not used by that date are forfeited.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Leave Accrual for Seafarers: Seafarers accrue paid leave at 2.5 calendar days for each month of service on board.": false,
+        "Carry-Over and Encashment: Up to 5 working days of unused annual leave may be carried over to the next calendar year and must be used by 31 March;": true
+      }
+    },
+    "latency_s": 1.88,
+    "tools_called": []
+  },
+  {
+    "case_id": "M-03",
+    "category": "multi_doc",
+    "question": "How does the travel per diem policy for seafarers relate to the sick leave policy for shore staff regarding the requirement for a medical certificate?",
+    "expected_behavior": "answer",
+    "answer": "The travel per diem policy for seafarers does not relate to the sick leave policy for shore staff regarding the requirement for a medical certificate. The sick leave policy for shore staff requires a medical certificate for any absence of 2 or more consecutive days, and for any sick day adjacent to a public holiday or annual leave. The travel per diem policy for seafarers is about reimbursement for travel and accommodation expenses, and does not mention medical certificates.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.2]",
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 1,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "travel per diem of USD 40 per day is paid for each day of travel and for each night spent in a transit hotel.": false,
+        "A medical certificate from a registered practitioner is required for any absence of 2 or more consecutive days, and for any sick day adjacent to a public holiday or annual leave.": true
+      }
+    },
+    "latency_s": 3.41,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-01",
+    "category": "out_of_scope",
+    "question": "Can you tell me about pension contributions?",
+    "expected_behavior": "refuse",
+    "answer": "The provided excerpts do not contain any information related to pension contributions. They discuss leave policies and related matters, but do not mention anything about pension contributions.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 1.74,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-02",
+    "category": "out_of_scope",
+    "question": "Can you help me with individual disputes?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 1.11,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-03",
+    "category": "out_of_scope",
+    "question": "Can you help me with disciplinary cases?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 1.07,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-04",
+    "category": "out_of_scope",
+    "question": "Can you help me with legal advice?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 1.2,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-05",
+    "category": "out_of_scope",
+    "question": "How does Bluewater Fleet Management handle disciplinary cases and what are the procedures?",
+    "expected_behavior": "refuse",
+    "answer": "Bluewater Fleet Management does not handle disciplinary cases as per the provided documents. The documents do not cover procedures for disciplinary cases, individual disputes, or any legal advice. They focus on leave policies and related matters.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 2.18,
+    "tools_called": []
+  },
+  {
+    "case_id": "E-01",
+    "category": "edge",
+    "question": "How many working days of annual leave can be kept over to next yr and hv to b used by march 31?",
+    "expected_behavior": "answer",
+    "answer": "Up to 5 working days of unused annual leave may be carried over to the next calendar year and must be used by 31 March; carried-over days not used by that date are forfeited.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 0.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "HALLUCINATION",
+    "failure_reason": "only 0% of claims are supported by the context",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 0,
+      "fabricated_quotes": 1,
+      "claims_rescued": 0,
+      "unsupported_claims": [
+        "..."
+      ],
+      "facts": {
+        "Up to 5 working days of unused annual leave may be carried over to the next calendar year and must be used by 31 March;": true
+      }
+    },
+    "latency_s": 2.14,
+    "tools_called": []
+  },
+  {
+    "case_id": "E-02",
+    "category": "edge",
+    "question": "what is the combined tour length for a Chief Officer (rank group) who has completed 5 yrs of continuous service and is entitled to 30 wd of paid annual leave per cal yr, according to the HRP-01 and CRT-03 policies? (assume the CRT-03 states 4 mo tour for Senior officers, and HRP-01 states 24 wd for shore staff)",
+    "expected_behavior": "answer",
+    "answer": "The combined tour length for a Chief Officer (rank group) who has completed 5 years of continuous service and is entitled to 30 working days of paid annual leave per calendar year, according to the HRP-01 policy, is 4 months. The CRT-03 policy states that Senior officers accrue a 4-month tour length, which is applicable here.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.1]",
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "CRT-03 Crew Leave, Rotation and Travel Policy - fictional document for demonstration Page 1: Standard tour on board for Senior officers (Chief Officer, 2nd Engineer) is 4 months.": false,
+        "HRP-01 Shore Staff Leave Policy - fictional document for demonstration Page 1: Shore staff are entitled to 24 working days of paid annual leave per calendar year. Employees who have completed 5 years of continuous service are entitled to 30 working days per calendar year from the start of the following year.": false
+      }
+    },
+    "latency_s": 3.33,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-09",
+    "category": "single_doc",
+    "question": "What is the minimum number of crew members, including at least one licensed deck officer and one licensed engineer officer, required to remain on board during shore leave?",
+    "expected_behavior": "answer",
+    "answer": "The minimum number of crew members, including at least one licensed deck officer and one licensed engineer officer, required to remain on board during shore leave is at least one third of the crew.",
+    "refused": false,
+    "citations": [
+      "[CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "At least one third of the crew, including one licensed deck officer and one licensed engineer officer, must remain on board at all times.": true
+      }
+    },
+    "latency_s": 2.06,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-10",
+    "category": "single_doc",
+    "question": "What is the maximum number of days of paid hospitalisation leave for shore staff in a calendar year?",
+    "expected_behavior": "answer",
+    "answer": "The maximum number of days of paid hospitalisation leave for shore staff in a calendar year is 60 days.",
+    "refused": false,
+    "citations": [
+      "[HRP-01_Shore_Staff_Leave_Policy.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "HRP-01_Shore_Staff_Leave_Policy.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "up to 60 calendar days of paid hospitalisation leave": true
+      }
+    },
+    "latency_s": 1.66,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-11",
+    "category": "single_doc",
+    "question": "What is the minimum notice given for a planned relief, and what is the maximum delay allowed before a delay allowance is paid, and how many days is that notice?",
+    "expected_behavior": "answer",
+    "answer": "The minimum notice given for a planned relief is at least 30 days. The maximum delay allowed before a delay allowance of USD 25 per day is paid is more than 14 days. That notice is 14 days.",
+    "refused": false,
+    "citations": [
+      "[CRT-03_Crew_Leave_Rotation_and_Travel.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf",
+      "HRP-01_Shore_Staff_Leave_Policy.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "The Crewing Department will give each seafarer at least 30 days' notice of the planned relief date.": false,
+        "If a relief is delayed beyond the contract end date by more than 14 days, a delay allowance of USD 25 per day is paid.": true
+      }
+    },
+    "latency_s": 2.18,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-12",
+    "category": "single_doc",
+    "question": "What is the minimum percentage of crew members that must remain on board at all times?",
+    "expected_behavior": "answer",
+    "answer": "The minimum percentage of crew members that must remain on board at all times is 33% (at least one third of the crew, including one licensed deck officer and one licensed engineer officer).",
+    "refused": false,
+    "citations": [
+      "[CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "CSL-02_Crew_Shore_Leave_and_Port_Conduct.pdf",
+      "CRT-03_Crew_Leave_Rotation_and_Travel.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "At least one third of the crew, including one licensed deck officer and one licensed engineer officer, must remain on board at all times.": true
+      }
+    },
+    "latency_s": 1.9,
+    "tools_called": []
+  }
+]

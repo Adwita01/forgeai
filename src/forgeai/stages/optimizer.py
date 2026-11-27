@@ -19,7 +19,7 @@ from collections import Counter
 from typing import Callable, Optional
 
 from ..budget import BudgetExceeded
-from ..llm import LLM, LLMError, load_prompt, split_prompt
+from ..llm import FALLBACK_ERRORS, LLM, LLMError, load_prompt, split_prompt
 from ..schemas import AgentDefinition, CaseResult, EvalSet, FailureCategory, IterationRecord, LearnedRules, Patch, Scorecard
 from ..textutil import numbers, overlap
 
@@ -101,7 +101,7 @@ class Optimizer:
         rules, source = [], "llm"
         try:
             proposed = self.llm.structured(LearnedRules, sys_t, user_t, stage="optimizer", temperature=0.3, max_tokens=400).rules
-        except LLMError:
+        except FALLBACK_ERRORS:
             proposed = []
         for r in proposed:
             r = re.sub(r"\s+", " ", r).strip()
@@ -184,6 +184,10 @@ def optimize(
     best, best_sc, best_res = agent_def, sc, results
     opt = Optimizer(llm, eval_set)
     log(f"iteration 0 (baseline): overall {sc.overall:.3f}, pass {sc.pass_rate:.0%}, failures {sc.failures_by_type}")
+    if not sc.complete:
+        history[-1].stop_reason = f"budget exhausted during the baseline eval: {sc.n_cases}/{sc.n_planned} cases scored; no optimisation possible"
+        log(f"iteration 0: {history[-1].stop_reason}")
+        return best, history, scorecards, all_results, defs
 
     for it in range(1, max_iters + 1):
         if best_sc.pass_rate >= 1.0:
@@ -218,6 +222,11 @@ def optimize(
         except BudgetExceeded as e:
             history.append(IterationRecord(iteration=it, agent_version=cand.version, score_before=best_sc.overall, pass_rate_before=best_sc.pass_rate,
                                            failures_by_type=best_sc.failures_by_type, patches=patches, decision="stopped", stop_reason=f"budget exhausted mid-run: {e}"))
+            break
+        if not csc.complete:  # a partial run can't be compared with the baseline: discard the candidate
+            history.append(IterationRecord(iteration=it, agent_version=cand.version, score_before=best_sc.overall, pass_rate_before=best_sc.pass_rate,
+                                           failures_by_type=best_sc.failures_by_type, patches=patches, decision="stopped",
+                                           stop_reason=f"budget exhausted mid-run ({csc.n_cases}/{csc.n_planned} cases); candidate discarded, best version kept"))
             break
         run_tokens, run_secs = budget.tokens_used - t_tok, budget.elapsed - t_sec
         gain = csc.overall - best_sc.overall

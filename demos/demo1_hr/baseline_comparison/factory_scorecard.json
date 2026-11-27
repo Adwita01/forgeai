@@ -1,0 +1,44 @@
+{
+  "iteration": 0,
+  "agent_version": 1,
+  "n_cases": 22,
+  "pass_rate": 0.773,
+  "groundedness": 0.882,
+  "factuality": 0.627,
+  "refusal_accuracy": 0.955,
+  "citation_validity": 1.0,
+  "by_category": {
+    "single_doc": {
+      "n": 12.0,
+      "pass_rate": 0.833,
+      "factuality": 0.722,
+      "groundedness": 1.0
+    },
+    "multi_doc": {
+      "n": 3.0,
+      "pass_rate": 0.667,
+      "factuality": 0.333,
+      "groundedness": 0.667
+    },
+    "out_of_scope": {
+      "n": 5.0,
+      "pass_rate": 1.0,
+      "factuality": 1.0,
+      "groundedness": 1.0
+    },
+    "edge": {
+      "n": 2.0,
+      "pass_rate": 0.0,
+      "factuality": 0.5,
+      "groundedness": 0.5
+    }
+  },
+  "failures_by_type": {
+    "PROMPT_DEFECT": 3,
+    "WRONG_REFUSAL": 1,
+    "HALLUCINATION": 1
+  },
+  "overall": 0.802,
+  "n_planned": 22,
+  "complete": true
+}

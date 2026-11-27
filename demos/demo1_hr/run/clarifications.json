@@ -1,0 +1,57 @@
+{
+  "questions": [
+    {
+      "question": "Could you specify the tone you would like the assistant to use (formal, friendly, professional)?",
+      "why": "The tone will affect how the assistant interacts with the audience and the style of the answers.",
+      "default_answer": "Professional and friendly"
+    },
+    {
+      "question": "Are there any specific topics within the provided documents that you would like to exclude from the assistant's responses?",
+      "why": "Some topics might not be covered by the provided documents and should be refused.",
+      "default_answer": "None"
+    },
+    {
+      "question": "Should the assistant provide calculations or look up data from the documents for any questions?",
+      "why": "Some questions might require calculations or data lookup, which is not covered by the provided documents.",
+      "default_answer": "No, the assistant should not perform calculations or look up data from the documents."
+    },
+    {
+      "question": "Are there any legal or personal cases that should not be addressed by the assistant?",
+      "why": "Legal advice and personal cases are outside the scope of the provided documents.",
+      "default_answer": "None"
+    },
+    {
+      "question": "Are there any ambiguous terms in the brief that you would like clarified?",
+      "why": "Clarifying ambiguous terms will help in providing more accurate and relevant answers.",
+      "default_answer": "None"
+    }
+  ],
+  "answers": [
+    {
+      "question": "Could you specify the tone you would like the assistant to use (formal, friendly, professional)?",
+      "answer": "Plain, friendly and precise. Lead with the direct answer, then the conditions.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any specific topics within the provided documents that you would like to exclude from the assistant's responses?",
+      "answer": "Individual disputes or disciplinary cases, legal or medical advice, salary and payroll questions, and anything not written in our policies.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Should the assistant provide calculations or look up data from the documents for any questions?",
+      "answer": "No calculations or live data are needed; quote the policy figures as written.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any legal or personal cases that should not be addressed by the assistant?",
+      "answer": "Use the policies as the only source of truth and refuse anything they do not cover.",
+      "source": "answers_file"
+    },
+    {
+      "question": "Are there any ambiguous terms in the brief that you would like clarified?",
+      "answer": "Use the policies as the only source of truth and refuse anything they do not cover.",
+      "source": "answers_file"
+    }
+  ],
+  "source": "llm"
+}

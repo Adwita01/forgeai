@@ -36,15 +36,23 @@ def _pct(x: float) -> str:
 
 def write_report(out: Path, brief: str, manifest: EvidenceManifest, req: Requirements, verdicts, agent: AgentDefinition,
                  eval_set: EvalSet, history: list[IterationRecord], scorecards: list[Scorecard], final: list[CaseResult],
-                 budget: dict, gen_meta: dict, s: Settings) -> Path:
+                 budget: dict, gen_meta: dict, s: Settings, status: dict | None = None) -> Path:
     final_sc = next(sc for sc in reversed(scorecards) if sc.agent_version == agent.version)
     L: list[str] = []
     w = L.append
     w(f"# Quality report - {agent.name}\n")
-    w(f"> **Final: {_pct(final_sc.pass_rate)} of {final_sc.n_cases} generated test cases pass** "
+    scored = f"{final_sc.n_cases}" if final_sc.complete else f"{final_sc.n_cases} scored (of {final_sc.n_planned})"
+    w(f"> **Final: {_pct(final_sc.pass_rate)} of {scored} generated test cases pass** "
       f"(overall score {final_sc.overall:.3f}). Model `{s.model}`, judge `{s.judge_model}`. "
       f"The numbers below are produced by an automated judge over an automatically generated test set; "
       f"see *Limitations of this evaluation* before trusting them.\n")
+    if status and status.get("status") != "complete":
+        lim = status.get("limits", {})
+        w(f"> ⚠ **This run was cut short by its budget** (limits: {lim.get('max_tokens') or '∞'} tokens / "
+          f"{lim.get('max_seconds') or '∞'}s). Everything below describes what was completed; treat the scores as provisional.")
+        for c in dict.fromkeys(status.get("cut_short", [])):
+            w(f">  - {c}")
+        w("")
     w("## Brief\n")
     w("\n".join(f"> {line}" for line in brief.strip().splitlines()) + "\n")
 
@@ -146,6 +154,9 @@ def write_report(out: Path, brief: str, manifest: EvidenceManifest, req: Require
     invalid_c = sum(1 for r in final if not r.citations_valid)
     w("## Judge integrity checks\n")
     w(f"- Judge quotes rejected as not verbatim in the context (fabricated or garbled): **{fabricated}**")
+    rescued = sum(int(r.judge_detail.get("claims_rescued", 0)) for r in final)
+    w(f"- Of those, claims still accepted because the claim itself checks out deterministically "
+      f"(exact numbers, >=60% word overlap with the context): **{rescued}**")
     w(f"- Cases scored by the deterministic fallback because the LLM judge failed schema validation: **{fallback}**")
     w(f"- Answers citing a file/page/row that does not exist in the Evidence Manifest: **{invalid_c}**")
     w(f"- Expected sources retrieved: {_pct(sum(r.expected_source_retrieved for r in final) / max(1, len(final)))}; "

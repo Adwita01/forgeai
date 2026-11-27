@@ -1,0 +1,84 @@
+[
+  {
+    "iteration": 0,
+    "agent_version": 0,
+    "score_before": 0.802,
+    "score_after": 0.802,
+    "pass_rate_before": 0.773,
+    "pass_rate_after": 0.773,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 3,
+      "WRONG_REFUSAL": 1,
+      "HALLUCINATION": 1
+    },
+    "patches": [],
+    "decision": "baseline",
+    "stop_reason": "",
+    "tokens_used": 75319,
+    "seconds_used": 134.1
+  },
+  {
+    "iteration": 1,
+    "agent_version": 1,
+    "score_before": 0.802,
+    "score_after": 0.802,
+    "pass_rate_before": 0.773,
+    "pass_rate_after": 0.773,
+    "failures_by_type": {
+      "PROMPT_DEFECT": 3,
+      "WRONG_REFUSAL": 1,
+      "HALLUCINATION": 1
+    },
+    "patches": [
+      {
+        "target": "PROMPT_DEFECT",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [],
+        "after": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide direct citations or references from the documents to support the answer."
+        ],
+        "rationale": "3 PROMPT_DEFECT failures; added 2 llm rule(s)",
+        "addresses_cases": [
+          "S-03",
+          "S-05",
+          "E-02"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "prompt_rule",
+        "field": "prompt_rules",
+        "before": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide direct citations or references from the documents to support the answer."
+        ],
+        "after": [
+          "Ensure answers include all required facts and do not omit essential details.",
+          "Provide direct citations or references from the documents to support the answer.",
+          "Include a direct citation or reference to the HRP-01 policy for the Chief Officer's tour length, ensuring the answer is grounded in the provided documents."
+        ],
+        "rationale": "1 WRONG_REFUSAL failures; added 1 llm rule(s)",
+        "addresses_cases": [
+          "M-01"
+        ]
+      },
+      {
+        "target": "WRONG_REFUSAL",
+        "kind": "contract",
+        "field": "output_contract.refusal_policy",
+        "before": "Refuse when the retrieved context does not contain the answer, or when the question is in a must-refuse topic. Never answer from general knowledge. Known gaps: pension contributions.",
+        "after": "Refuse when the retrieved context does not contain the answer, or when the question is in a must-refuse topic. Never answer from general knowledge. Known gaps: pension contributions. Partial information is not a reason to refuse: answer what the passages state and name what is missing.",
+        "rationale": "agent refused despite relevant retrieved evidence",
+        "addresses_cases": [
+          "M-01"
+        ]
+      }
+    ],
+    "decision": "kept",
+    "stop_reason": "early stop: gain +0.000 below min_gain 0.02",
+    "tokens_used": 56069,
+    "seconds_used": 67.5
+  }
+]

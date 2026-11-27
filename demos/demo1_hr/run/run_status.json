@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "stage": "done",
+  "elapsed_s": 452.2,
+  "tokens_used": 164059,
+  "limits": {
+    "max_tokens": 0,
+    "max_seconds": 14400.0
+  },
+  "cut_short": [],
+  "artifacts_written": [
+    "agent_definition.json",
+    "agent_definition.v0.json",
+    "brief.txt",
+    "budget.json",
+    "clarifications.json",
+    "eval_set.json",
+    "evidence_manifest.json",
+    "final_results.json",
+    "generator_meta.json",
+    "groundability.json",
+    "iteration_log.json",
+    "iterations/agent_definition.iter0.json",
+    "iterations/agent_definition.iter1.json",
+    "iterations/results_iter0.json",
+    "iterations/results_iter1.json",
+    "quality_report.md",
+    "requirements.json",
+    "scorecard.json"
+  ]
+}

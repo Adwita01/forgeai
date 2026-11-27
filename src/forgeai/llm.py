@@ -21,7 +21,7 @@ from typing import Any, Optional, Type, TypeVar
 import requests
 from pydantic import BaseModel, ValidationError
 
-from .budget import Budget
+from .budget import Budget, BudgetExceeded
 from .config import Settings, get_settings
 
 T = TypeVar("T", bound=BaseModel)
@@ -29,6 +29,18 @@ T = TypeVar("T", bound=BaseModel)
 
 class LLMError(RuntimeError):
     pass
+
+
+class BackendUnavailable(RuntimeError):
+    """The model server is down, out of memory or stalled.
+
+    Deliberately NOT an LLMError: stage fallbacks must not paper over a dead backend
+    (that would silently build a junk agent). The pipeline aborts cleanly instead.
+    """
+
+
+# Errors a stage may answer with its deterministic fallback. A dead backend is not one of them.
+FALLBACK_ERRORS = (LLMError, BudgetExceeded)
 
 
 class StructuredOutputError(LLMError):
@@ -187,6 +199,9 @@ class LLM:
         except Exception as e:  # noqa: BLE001
             return {"reachable": False, "model_available": False, "error": str(e)}
 
+    def _alive(self) -> bool:
+        return bool(self.health().get("reachable"))
+
     def _headers(self) -> dict:
         return {"Authorization": f"Bearer {self.s.api_key}", "Content-Type": "application/json"}
 
@@ -202,32 +217,55 @@ class LLM:
         max_tokens: int = 1500,
         retry: bool = False,
     ) -> str:
-        """One raw call. Returns the assistant text. Budget-checked and cached."""
-        self.budget.check()
+        """One raw call. Returns the assistant text. Cached; uncached calls are budget-checked.
+
+        Transport policy (fail fast instead of hanging for hours on a dead server):
+        - connection refused -> wait briefly, re-probe; still down -> BackendUnavailable
+        - read timeout -> retry once if the server still answers a cheap probe; a second
+          timeout means the model is stalled (typically RAM thrash) -> BackendUnavailable
+        - HTTP 5xx mentioning memory -> BackendUnavailable (Ollama OOM)
+        """
         model = model or self.s.model
         temperature = self.s.temperature if temperature is None else temperature
         key = {"m": model, "msgs": messages, "t": temperature, "schema": json_schema, "json": json_mode, "b": self.backend}
         cpath = self._cache_path(key)
         if self.use_cache and cpath.exists():
-            try:
+            try:  # cached replies cost nothing, so they are served even when the budget is spent (cheap resume)
                 return json.loads(cpath.read_text(encoding="utf-8"))["text"]
             except Exception:  # noqa: BLE001
                 pass
+        self.budget.check()
 
         t0 = time.monotonic()
         last_exc: Optional[Exception] = None
-        for net_attempt in range(3):  # transport-level retries (timeouts, 5xx)
+        timeouts = 0
+        for net_attempt in range(3):
             try:
                 text, pt, ct = self._call(messages, model, temperature, json_schema, json_mode, max_tokens)
                 break
             except requests.HTTPError as e:
+                body = (e.response.text if e.response is not None else "")[:300]
+                if re.search(r"memory|out of memory|oom|insufficient", body, re.I):
+                    self.budget.record_failure(stage)
+                    raise BackendUnavailable(f"[{stage}] model server ran out of memory: {body.strip()}") from e
                 # Grammar-constrained schema rejected by server -> degrade to plain JSON mode once.
                 if json_schema is not None and e.response is not None and e.response.status_code in (400, 422, 500):
                     json_schema, json_mode = None, True
                 last_exc = e
-            except (requests.ConnectionError, requests.Timeout) as e:
+            except requests.Timeout as e:
+                last_exc, timeouts = e, timeouts + 1
+                if timeouts >= 2 or not self._alive():
+                    self.budget.record_failure(stage)
+                    raise BackendUnavailable(
+                        f"[{stage}] model server stalled: {timeouts} request(s) exceeded {self.s.request_timeout}s"
+                        + ("" if self._alive() else " and the server no longer responds")) from e
+            except requests.ConnectionError as e:
                 last_exc = e
-                time.sleep(2 * (net_attempt + 1))
+                time.sleep(3 * (net_attempt + 1))
+                if not self._alive():
+                    if net_attempt >= 1:
+                        self.budget.record_failure(stage)
+                        raise BackendUnavailable(f"[{stage}] model server at {self.s.base_url} is not reachable: {e}") from e
         else:
             self.budget.record_failure(stage)
             raise LLMError(f"[{stage}] LLM request failed after retries: {last_exc}")

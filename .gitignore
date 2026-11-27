@@ -12,3 +12,4 @@ forge_eval/
 comparison/
 OceanAI_Jr_GenAI_Engineer_Campus_Recruitment_Assignment.pdf
 *.egg-info/
+dist/

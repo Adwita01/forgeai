@@ -1,0 +1,224 @@
+{
+  "final": {
+    "iteration": 3,
+    "agent_version": 3,
+    "n_cases": 24,
+    "pass_rate": 0.542,
+    "groundedness": 0.947,
+    "factuality": 0.421,
+    "refusal_accuracy": 0.917,
+    "citation_validity": 1.0,
+    "by_category": {
+      "single_doc": {
+        "n": 9.0,
+        "pass_rate": 0.667,
+        "factuality": 0.667,
+        "groundedness": 1.0
+      },
+      "multi_doc": {
+        "n": 5.0,
+        "pass_rate": 0.2,
+        "factuality": 0.1,
+        "groundedness": 0.8
+      },
+      "out_of_scope": {
+        "n": 5.0,
+        "pass_rate": 0.8,
+        "factuality": 0.8,
+        "groundedness": 1.0
+      },
+      "edge": {
+        "n": 5.0,
+        "pass_rate": 0.4,
+        "factuality": 0.3,
+        "groundedness": 1.0
+      }
+    },
+    "failures_by_type": {
+      "PROMPT_DEFECT": 9,
+      "WRONG_REFUSAL": 1,
+      "HALLUCINATION": 1
+    },
+    "overall": 0.6738,
+    "n_planned": 24,
+    "complete": true
+  },
+  "per_iteration": [
+    {
+      "iteration": 0,
+      "agent_version": 0,
+      "n_cases": 24,
+      "pass_rate": 0.542,
+      "groundedness": 0.947,
+      "factuality": 0.395,
+      "refusal_accuracy": 0.917,
+      "citation_validity": 1.0,
+      "by_category": {
+        "single_doc": {
+          "n": 9.0,
+          "pass_rate": 0.667,
+          "factuality": 0.611,
+          "groundedness": 1.0
+        },
+        "multi_doc": {
+          "n": 5.0,
+          "pass_rate": 0.2,
+          "factuality": 0.1,
+          "groundedness": 0.8
+        },
+        "out_of_scope": {
+          "n": 5.0,
+          "pass_rate": 0.8,
+          "factuality": 0.8,
+          "groundedness": 1.0
+        },
+        "edge": {
+          "n": 5.0,
+          "pass_rate": 0.4,
+          "factuality": 0.3,
+          "groundedness": 1.0
+        }
+      },
+      "failures_by_type": {
+        "PROMPT_DEFECT": 9,
+        "WRONG_REFUSAL": 1,
+        "HALLUCINATION": 1
+      },
+      "overall": 0.6686,
+      "n_planned": 24,
+      "complete": true
+    },
+    {
+      "iteration": 1,
+      "agent_version": 1,
+      "n_cases": 24,
+      "pass_rate": 0.5,
+      "groundedness": 0.895,
+      "factuality": 0.421,
+      "refusal_accuracy": 0.833,
+      "citation_validity": 1.0,
+      "by_category": {
+        "single_doc": {
+          "n": 9.0,
+          "pass_rate": 0.667,
+          "factuality": 0.667,
+          "groundedness": 1.0
+        },
+        "multi_doc": {
+          "n": 5.0,
+          "pass_rate": 0.2,
+          "factuality": 0.1,
+          "groundedness": 0.6
+        },
+        "out_of_scope": {
+          "n": 5.0,
+          "pass_rate": 0.6,
+          "factuality": 0.6,
+          "groundedness": 0.9
+        },
+        "edge": {
+          "n": 5.0,
+          "pass_rate": 0.4,
+          "factuality": 0.3,
+          "groundedness": 1.0
+        }
+      },
+      "failures_by_type": {
+        "PROMPT_DEFECT": 8,
+        "WRONG_REFUSAL": 2,
+        "HALLUCINATION": 2
+      },
+      "overall": 0.6298,
+      "n_planned": 24,
+      "complete": true
+    },
+    {
+      "iteration": 2,
+      "agent_version": 2,
+      "n_cases": 24,
+      "pass_rate": 0.5,
+      "groundedness": 0.895,
+      "factuality": 0.395,
+      "refusal_accuracy": 0.875,
+      "citation_validity": 1.0,
+      "by_category": {
+        "single_doc": {
+          "n": 9.0,
+          "pass_rate": 0.667,
+          "factuality": 0.667,
+          "groundedness": 1.0
+        },
+        "multi_doc": {
+          "n": 5.0,
+          "pass_rate": 0.2,
+          "factuality": 0.1,
+          "groundedness": 0.6
+        },
+        "out_of_scope": {
+          "n": 5.0,
+          "pass_rate": 0.8,
+          "factuality": 0.8,
+          "groundedness": 1.0
+        },
+        "edge": {
+          "n": 5.0,
+          "pass_rate": 0.2,
+          "factuality": 0.2,
+          "groundedness": 1.0
+        }
+      },
+      "failures_by_type": {
+        "PROMPT_DEFECT": 9,
+        "WRONG_REFUSAL": 2,
+        "HALLUCINATION": 1
+      },
+      "overall": 0.633,
+      "n_planned": 24,
+      "complete": true
+    },
+    {
+      "iteration": 3,
+      "agent_version": 3,
+      "n_cases": 24,
+      "pass_rate": 0.542,
+      "groundedness": 0.947,
+      "factuality": 0.421,
+      "refusal_accuracy": 0.917,
+      "citation_validity": 1.0,
+      "by_category": {
+        "single_doc": {
+          "n": 9.0,
+          "pass_rate": 0.667,
+          "factuality": 0.667,
+          "groundedness": 1.0
+        },
+        "multi_doc": {
+          "n": 5.0,
+          "pass_rate": 0.2,
+          "factuality": 0.1,
+          "groundedness": 0.8
+        },
+        "out_of_scope": {
+          "n": 5.0,
+          "pass_rate": 0.8,
+          "factuality": 0.8,
+          "groundedness": 1.0
+        },
+        "edge": {
+          "n": 5.0,
+          "pass_rate": 0.4,
+          "factuality": 0.3,
+          "groundedness": 1.0
+        }
+      },
+      "failures_by_type": {
+        "PROMPT_DEFECT": 9,
+        "WRONG_REFUSAL": 1,
+        "HALLUCINATION": 1
+      },
+      "overall": 0.6738,
+      "n_planned": 24,
+      "complete": true
+    }
+  ]
+}

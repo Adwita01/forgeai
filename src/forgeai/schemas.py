@@ -402,6 +402,7 @@ class CaseResult(BaseModel):
     failure_reason: str = ""
     judge_detail: dict[str, Any] = {}
     latency_s: float = 0.0
+    tools_called: list[str] = []  # audit trail: which tools the agent actually used
 
 
 class Scorecard(BaseModel):
@@ -416,6 +417,8 @@ class Scorecard(BaseModel):
     by_category: dict[str, dict[str, float]]
     failures_by_type: dict[str, int]
     overall: float
+    n_planned: int = 0  # cases in the eval set; > n_cases when the budget ran out mid-run
+    complete: bool = True
 
 
 # --------------------------------------------------------------------------- optimizer

@@ -15,7 +15,7 @@ from typing import Callable, Literal, Optional
 from .agent_runtime import Agent
 from .budget import Budget
 from .config import Settings, get_settings
-from .llm import LLM
+from .llm import LLM, BackendUnavailable
 from .manifest import build_manifest, save_manifest
 from .retriever import HybridRetriever
 from .schemas import AgentDefinition, EvalSet, Requirements, RetrievalConfig
@@ -65,13 +65,35 @@ def _dump(path: Path, obj) -> None:
     path.write_text(json.dumps(_jsonable(obj), indent=2, ensure_ascii=False, default=str), encoding="utf-8")
 
 
+def _write_status(out: Path, status: dict) -> None:
+    status["artifacts_written"] = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file() and p.name != "run_status.json")
+    _dump(out / "run_status.json", status)
+
+
 def build(opts: BuildOptions) -> BuildResult:
+    """Run the factory. Always leaves run_status.json behind: complete, budget_exhausted or aborted."""
     s = opts.settings or get_settings()
-    out = opts.out
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "iterations").mkdir(exist_ok=True)
+    opts.out.mkdir(parents=True, exist_ok=True)
+    (opts.out / "iterations").mkdir(exist_ok=True)
     budget = Budget(s.max_tokens, s.max_seconds)
     llm = LLM(s, budget, use_cache=opts.use_cache)
+    state = {"stage": "startup"}
+    try:
+        return _build(opts, s, budget, llm, state)
+    except BackendUnavailable as e:
+        _write_status(opts.out, {
+            "status": "aborted", "stage": state["stage"], "reason": str(e),
+            "elapsed_s": round(budget.elapsed, 1), "tokens_used": budget.tokens_used,
+            "resume": "Restart the model server (or free RAM) and rerun the same command: every completed LLM call is "
+                      "cached in .forge_cache and replays instantly, so the run continues where it stopped.",
+        })
+        opts.log(f"\n[ABORTED] {e}\n  stage: {state['stage']}\n  partial artifacts + run_status.json in {opts.out}\n"
+                 f"  fix the model server, then rerun the same command - completed calls replay from cache.")
+        raise
+
+
+def _build(opts: BuildOptions, s: Settings, budget: Budget, llm: LLM, state: dict) -> BuildResult:
+    out = opts.out
     log = opts.log
     t0 = time.monotonic()
     # docs path stored relative to the output dir so artifacts stay portable in the repo
@@ -84,14 +106,19 @@ def build(opts: BuildOptions) -> BuildResult:
     health = llm.health()
     log(f"backend={llm.backend} model={s.model} judge={s.judge_model} reachable={health.get('reachable')} model_available={health.get('model_available')}")
     if not health.get("reachable"):
-        log("WARNING: LLM endpoint unreachable - stages will fall back to deterministic defaults where possible.")
+        raise BackendUnavailable(f"model server at {s.base_url} is not reachable ({health.get('error', 'no response')}) - "
+                                 "start it (Ollama: open the app or run `ollama serve`) before building")
+    if not health.get("model_available"):
+        raise BackendUnavailable(f"model '{s.model}' is not available on the server - pull it first (e.g. `ollama pull {s.model}`)")
 
+    state["stage"] = "manifest"
     # ---- 0. evidence manifest (deterministic, before any LLM call)
     manifest, docs = build_manifest(opts.docs)
     save_manifest(manifest, out / "evidence_manifest.json")
     log(f"[manifest] {len(manifest.files)} files, {manifest.total_chars} chars; warnings: {manifest.warnings or 'none'}")
     (out / "brief.txt").write_text(opts.brief, encoding="utf-8")
 
+    state["stage"] = "interviewer"
     # ---- 1. interviewer
     questions, q_src = interviewer.ask_questions(llm, opts.brief, manifest)
     log(f"[interviewer] {len(questions)} clarifying questions ({q_src})")
@@ -100,6 +127,7 @@ def build(opts: BuildOptions) -> BuildResult:
     req, r_src = interviewer.draft_requirements(llm, opts.brief, qa, manifest)
     log(f"[interviewer] requirements drafted ({r_src}); capabilities: {req.capabilities.model_dump()}")
 
+    state["stage"] = "groundability"
     # ---- 2. groundability guard (uses a default-config retriever over the corpus)
     probe = HybridRetriever(docs, RetrievalConfig(), llm, cache_dir=s.cache_dir / "emb")
     req, verdicts = groundability.run_groundability(llm, probe, req)
@@ -122,12 +150,14 @@ def build(opts: BuildOptions) -> BuildResult:
         req.approved_by = "human"
         _dump(out / "requirements.json", req)
 
+    state["stage"] = "generator"
     # ---- 3. generator
     agent_def, gen_meta = generator.generate_agent(llm, req, manifest, docs_rel)
     _dump(out / "agent_definition.v0.json", agent_def)
     _dump(out / "generator_meta.json", gen_meta)
     log(f"[generator] tools={agent_def.selected_tools} retrieval={agent_def.retrieval_config.model_dump()} persona={gen_meta['persona_source']}")
 
+    state["stage"] = "eval_gen"
     # ---- 4. eval generator
     if opts.reuse_eval_set and opts.reuse_eval_set.exists():
         eval_set = EvalSet.model_validate_json(opts.reuse_eval_set.read_text(encoding="utf-8"))
@@ -139,6 +169,7 @@ def build(opts: BuildOptions) -> BuildResult:
             f"{c}={sum(1 for x in eval_set.cases if x.category.value == c)}" for c in ("single_doc", "multi_doc", "out_of_scope", "edge")))
     _dump(out / "eval_set.json", eval_set)
 
+    state["stage"] = "evaluate_and_optimize"
     # ---- 5+6. judge + critic-optimizer loop
     the_judge = judge.Judge(llm, manifest, require_citations=agent_def.output_contract.require_citations)
 
@@ -167,7 +198,17 @@ def build(opts: BuildOptions) -> BuildResult:
     bsum["wall_clock_s"] = round(time.monotonic() - t0, 1)
     _dump(out / "budget.json", bsum)
 
+    state["stage"] = "report"
+    partial = [f"scorecard for agent v{sc.agent_version} (iteration {sc.iteration}) covers only {sc.n_cases}/{sc.n_planned} cases"
+               for sc in scorecards if not sc.complete]
+    gen_cut = [n for n in eval_set.notes if n.startswith("budget exhausted")]
+    status = {"status": "budget_exhausted" if (partial or gen_cut or budget.exhausted()) else "complete",
+              "stage": "done", "elapsed_s": bsum["wall_clock_s"], "tokens_used": bsum["tokens_used"],
+              "limits": {"max_tokens": s.max_tokens, "max_seconds": s.max_seconds},
+              "cut_short": gen_cut + partial + [h.stop_reason for h in history if "budget" in h.stop_reason]}
     from .report import write_report  # local import: report depends on everything above
-    write_report(out, opts.brief, manifest, req, verdicts, best, eval_set, history, scorecards, all_results[final_it], bsum, gen_meta, s)
+    write_report(out, opts.brief, manifest, req, verdicts, best, eval_set, history, scorecards, all_results[final_it], bsum, gen_meta, s,
+                 status=status)
+    _write_status(out, status)
     log(f"[done] artifacts in {out}  (tokens={bsum['tokens_used']}, {bsum['wall_clock_s']}s)")
     return BuildResult(out, best, req, eval_set, scorecards, history, bsum)

@@ -78,6 +78,7 @@ class FakeLLM(LLM):
 
     def chat(self, messages, *, stage="misc", **kw):
         self.calls.append(stage)
+        self.budget.check()  # like the real client: uncached calls are budget-gated
         self.budget.record(stage, 100, 50, 0.01, retry=kw.get("retry", False))
         if stage in self.script:
             v = self.script[stage]

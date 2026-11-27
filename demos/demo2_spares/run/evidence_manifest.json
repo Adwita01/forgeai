@@ -1,0 +1,407 @@
+{
+  "folder": "demos/demo2_spares/docs",
+  "files": [
+    {
+      "filename": "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 2562,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 1435,
+          "headings": [
+            "1. Scope",
+            "2. Warranty",
+            "3. Claims Procedure"
+          ],
+          "preview": "Halcyon Engine Parts - Warranty and Service Terms - fictional document for demonstration Page 1 Halcyon Engine Parts - Warranty and Service Terms Frame Agreemen"
+        },
+        {
+          "page": 2,
+          "n_chars": 1126,
+          "headings": [
+            "4. Service Levels",
+            "5. Late Delivery",
+            "6. Commercial Terms"
+          ],
+          "preview": "Halcyon Engine Parts - Warranty and Service Terms - fictional document for demonstration Page 2 4. Service Levels Standard delivery: within the catalogue lead t"
+        }
+      ],
+      "sections": [
+        "1. Scope",
+        "2. Warranty",
+        "3. Claims Procedure",
+        "4. Service Levels",
+        "5. Late Delivery",
+        "6. Commercial Terms"
+      ],
+      "columns": [],
+      "key_entities": [
+        "FA-2025",
+        "Warranty and Service",
+        "HEP",
+        "USD",
+        "OEM",
+        "ISO"
+      ],
+      "numbers_with_units": [
+        "USD 1,000",
+        "USD 10,000",
+        "24 months",
+        "12 months",
+        "30 days",
+        "10 working days",
+        "48 hours",
+        "5 days",
+        "24 hours",
+        "7 days",
+        "2 hours",
+        "10 days",
+        "60 days"
+      ],
+      "title": "Halcyon Engine Parts - Warranty and Service Terms - fictional document for demonstration",
+      "warnings": []
+    },
+    {
+      "filename": "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 2979,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 1662,
+          "headings": [
+            "1. Scope of these Terms",
+            "2. Warranty Period",
+            "3. Warranty Claims"
+          ],
+          "preview": "Kestrel Marine Supply - Warranty and Service Level Terms - fictional document for demonstration Page 1 Kestrel Marine Supply - Warranty and Service Level Terms "
+        },
+        {
+          "page": 2,
+          "n_chars": 1316,
+          "headings": [
+            "4. Delivery Service Levels",
+            "5. Late Delivery Credits",
+            "6. Commercial Terms"
+          ],
+          "preview": "Kestrel Marine Supply - Warranty and Service Level Terms - fictional document for demonstration Page 2 4. Delivery Service Levels Standard orders: delivery to t"
+        }
+      ],
+      "sections": [
+        "1. Scope of these Terms",
+        "2. Warranty Period",
+        "3. Warranty Claims",
+        "4. Delivery Service Levels",
+        "5. Late Delivery Credits",
+        "6. Commercial Terms"
+      ],
+      "columns": [],
+      "key_entities": [
+        "FA-2026",
+        "Warranty and Service",
+        "KMS",
+        "USD"
+      ],
+      "numbers_with_units": [
+        "USD 250",
+        "18 months",
+        "12 months",
+        "6 months",
+        "24 months",
+        "14 days",
+        "5 working days",
+        "24\nhours",
+        "72 hours",
+        "45 days",
+        "30 days"
+      ],
+      "title": "Kestrel Marine Supply - Warranty and Service Level Terms - fictional document for demonstration",
+      "warnings": []
+    },
+    {
+      "filename": "PROC-01_Spares_Procurement_Procedure.pdf",
+      "kind": "pdf",
+      "n_pages": 2,
+      "n_rows": 0,
+      "n_chars": 2532,
+      "pages": [
+        {
+          "page": 1,
+          "n_chars": 1421,
+          "headings": [
+            "1. Purpose",
+            "2. Reordering Spares",
+            "3. Approval Limits"
+          ],
+          "preview": "PROC-01 Spares Procurement Procedure - fictional document for demonstration Page 1 PROC-01 Spares Procurement Procedure Bluewater Fleet Management Pte. Ltd. | T"
+        },
+        {
+          "page": 2,
+          "n_chars": 1110,
+          "headings": [
+            "4. Preferred Suppliers",
+            "5. Urgent and Emergency Orders",
+            "6. Receipt and Warranty Records"
+          ],
+          "preview": "PROC-01 Spares Procurement Procedure - fictional document for demonstration Page 2 4. Preferred Suppliers Engine-room machinery spares (main and auxiliary engin"
+        }
+      ],
+      "sections": [
+        "1. Purpose",
+        "2. Reordering Spares",
+        "3. Approval Limits",
+        "4. Preferred Suppliers",
+        "5. Urgent and Emergency Orders",
+        "6. Receipt and Warranty Records"
+      ],
+      "columns": [],
+      "key_entities": [
+        "PROC-01",
+        "PROC",
+        "USD",
+        "Engineers and Masters",
+        "Urgent and Emergency",
+        "Receipt and Warranty"
+      ],
+      "numbers_with_units": [
+        "USD 25,000",
+        "24\nhours",
+        "3 working days"
+      ],
+      "title": "PROC-01 Spares Procurement Procedure - fictional document for demonstration",
+      "warnings": []
+    },
+    {
+      "filename": "spare_parts_catalogue.csv",
+      "kind": "csv",
+      "n_pages": 0,
+      "n_rows": 40,
+      "n_chars": 10155,
+      "pages": [],
+      "sections": [],
+      "columns": [
+        {
+          "name": "part_no",
+          "dtype": "text",
+          "n_unique": 40,
+          "n_null": 0,
+          "samples": [
+            "HEP-ME-1001",
+            "HEP-ME-1002",
+            "HEP-ME-1003",
+            "HEP-ME-1004",
+            "HEP-ME-1005"
+          ],
+          "min": null,
+          "max": null
+        },
+        {
+          "name": "description",
+          "dtype": "text",
+          "n_unique": 40,
+          "n_null": 0,
+          "samples": [
+            "Fuel injection valve nozzle",
+            "Fuel pump plunger and barrel assembly",
+            "Exhaust valve spindle",
+            "Piston ring set (one cylinder)",
+            "Cylinder liner O-ring kit"
+          ],
+          "min": null,
+          "max": null
+        },
+        {
+          "name": "equipment",
+          "dtype": "text",
+          "n_unique": 20,
+          "n_null": 0,
+          "samples": [
+            "Main engine MAN B&W 6S50ME-C",
+            "Turbocharger ABB A170-L",
+            "Auxiliary engine Yanmar 6EY18ALW",
+            "Separator Alfa Laval S821",
+            "Main air compressor Sperre HV2/200"
+          ],
+          "min": null,
+          "max": null
+        },
+        {
+          "name": "supplier",
+          "dtype": "text",
+          "n_unique": 2,
+          "n_null": 0,
+          "samples": [
+            "Halcyon Engine Parts Pte. Ltd.",
+            "Kestrel Marine Supply Ltd."
+          ],
+          "min": null,
+          "max": null
+        },
+        {
+          "name": "unit_price_usd",
+          "dtype": "number",
+          "n_unique": 39,
+          "n_null": 0,
+          "samples": [
+            "1840.00",
+            "6250.00",
+            "9400.00",
+            "2380.00",
+            "315.50"
+          ],
+          "min": 18.6,
+          "max": 14500.0
+        },
+        {
+          "name": "stock_qty",
+          "dtype": "integer",
+          "n_unique": 20,
+          "n_null": 0,
+          "samples": [
+            "17",
+            "0",
+            "2",
+            "8",
+            "11"
+          ],
+          "min": 0.0,
+          "max": 72.0
+        },
+        {
+          "name": "min_stock",
+          "dtype": "integer",
+          "n_unique": 11,
+          "n_null": 0,
+          "samples": [
+            "6",
+            "2",
+            "1",
+            "4",
+            "24"
+          ],
+          "min": 1.0,
+          "max": 30.0
+        },
+        {
+          "name": "lead_time_days",
+          "dtype": "integer",
+          "n_unique": 11,
+          "n_null": 0,
+          "samples": [
+            "21",
+            "35",
+            "42",
+            "28",
+            "14"
+          ],
+          "min": 5.0,
+          "max": 63.0
+        },
+        {
+          "name": "warehouse",
+          "dtype": "text",
+          "n_unique": 3,
+          "n_null": 0,
+          "samples": [
+            "Singapore",
+            "Rotterdam",
+            "Fujairah"
+          ],
+          "min": null,
+          "max": null
+        },
+        {
+          "name": "criticality",
+          "dtype": "text",
+          "n_unique": 4,
+          "n_null": 0,
+          "samples": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "min": null,
+          "max": null
+        }
+      ],
+      "key_entities": [
+        "HEP-ME-1001",
+        "HEP-ME-1002",
+        "HEP-ME-1003",
+        "HEP-ME-1004",
+        "Fuel injection valve nozzle",
+        "Fuel pump plunger and barrel assembly",
+        "Exhaust valve spindle",
+        "Piston ring set (one cylinder)",
+        "Main engine MAN B&W 6S50ME-C",
+        "Turbocharger ABB A170-L",
+        "Auxiliary engine Yanmar 6EY18ALW",
+        "Separator Alfa Laval S821",
+        "Halcyon Engine Parts Pte. Ltd.",
+        "Kestrel Marine Supply Ltd.",
+        "Singapore",
+        "Rotterdam",
+        "Fujairah",
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "numbers_with_units": [
+        "5kg"
+      ],
+      "title": "Table with 40 rows x 10 columns",
+      "warnings": []
+    }
+  ],
+  "corpus_key_terms": [
+    "stock",
+    "equipment",
+    "description",
+    "unit",
+    "qty",
+    "min",
+    "price",
+    "criticality",
+    "engine",
+    "part",
+    "time",
+    "lead",
+    "warehouse",
+    "supplier",
+    "days",
+    "ltd",
+    "usd",
+    "halcyon",
+    "kestrel",
+    "marine",
+    "high",
+    "parts",
+    "supply",
+    "critical",
+    "warranty",
+    "pte",
+    "terms",
+    "singapore",
+    "rotterdam",
+    "fujairah",
+    "delivery",
+    "main",
+    "service",
+    "order",
+    "spares",
+    "yanmar",
+    "ey18alw",
+    "months",
+    "auxiliary",
+    "urgent"
+  ],
+  "total_chars": 18228,
+  "warnings": []
+}

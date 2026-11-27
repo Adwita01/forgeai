@@ -1,0 +1,65 @@
+{
+  "dense_backend": "embed:nomic-embed-text",
+  "verdicts": [
+    {
+      "topic": "spare parts",
+      "verdict": "partial",
+      "evidence_quote": "[spare_parts_catalogue.csv row 7] [spare_parts_catalogue.csv row 15] [spare_parts_catalogue.csv row 4] [spare_parts_catalogue.csv row 10]",
+      "reason": "The provided excerpts contain multiple rows from the spare_parts_catalogue.csv file, each with details about different spare parts, their descriptions, equipment, suppliers, unit prices, stock quantities, minimum stock requirements, lead times, warehouses, and criticality levels. This evidence directly supports answering questions about spare parts. | downgraded: evidence quote not found verbatim in the excerpts"
+    },
+    {
+      "topic": "price",
+      "verdict": "supported",
+      "evidence_quote": "[spare_parts_catalogue.csv row 24] [spare_parts_catalogue.csv] row 24: part_no: KMS-EL-4004; description: Navigation light lamp 65W; equipment: Navigation lights; supplier: Kestrel Marine Supply Ltd.; unit_price_usd: 18.60; stock_qty: 62; min_stock: 20; lead_time_days: 5; warehouse: Fujairah; criticality: high",
+      "reason": "The evidence_quote provides the unit_price_usd for a specific part (KMS-EL-4004), which is a concrete price information relevant to the topic of price."
+    },
+    {
+      "topic": "stock on hand",
+      "verdict": "supported",
+      "evidence_quote": "[spare_parts_catalogue.csv row 37] [spare_parts_catalogue.csv] row 37: part_no: KMS-DK-6005; stock_qty: 4",
+      "reason": "The excerpt provides specific stock quantity for a part, which directly addresses the topic of stock on hand."
+    },
+    {
+      "topic": "minimum stock",
+      "verdict": "supported",
+      "evidence_quote": "[spare_parts_catalogue.csv row 26] row 26: part_no: KMS-EL-4006; description: Insulation resistance tester; equipment: Workshop; supplier: Kestrel Marine Supply Ltd.; unit_price_usd: 780.00; stock_qty: 1; min_stock: 1; lead_time_days: 14; warehouse: Rotterdam; criticality: low\n[spare_parts_catalogue.csv row 37] row 37: part_no: KMS-DK-6005; description: Pilot ladder 9m SOLAS; equipment: Pilot transfer; supplier: Kestrel Marine Supply Ltd.; unit_price_usd: 1180.00; stock_qty: 4; min_stock: 1; lead_time_days: 21; warehouse: Singapore; criticality: critical",
+      "reason": "The excerpts provide specific details about minimum stock levels for two different spare parts, KMS-EL-4006 and KMS-DK-6005, which directly support answering questions about minimum stock."
+    },
+    {
+      "topic": "lead time",
+      "verdict": "supported",
+      "evidence_quote": "[spare_parts_catalogue.csv row 40] lead_time_days: 10; [spare_parts_catalogue.csv row 39] lead_time_days: 14; [spare_parts_catalogue.csv row 22] lead_time_days: 10; [spare_parts_catalogue.csv row 37] lead_time_days: 21",
+      "reason": "The provided CSV excerpt contains lead time days for multiple parts, directly addressing the topic of lead time."
+    },
+    {
+      "topic": "supplier",
+      "verdict": "supported",
+      "evidence_quote": "[spare_parts_catalogue.csv row 37] [spare_parts_catalogue.csv] columns: part_no, description, equipment, supplier, unit_price_usd, stock_qty, min_stock, lead_time_days, warehouse, criticality\nrow 37: part_no: KMS-DK-6005; description: Pilot ladder 9m SOLAS; equipment: Pilot transfer; supplier: Kestrel Marine Supply Ltd.; unit_price_usd: 1180.00; stock_qty: 4; min_stock: 1; lead_time_days: 21; warehouse: Singapore; criticality: critical",
+      "reason": "The provided CSV excerpt shows a supplier (Kestrel Marine Supply Ltd.) for a specific part (Pilot ladder 9m SOLAS), which directly supports the topic of suppliers."
+    },
+    {
+      "topic": "warranty",
+      "verdict": "supported",
+      "evidence_quote": "Spares are warranted against defects in material and workmanship for 18 months from delivery. Genuine engine spares are warranted for 24 months from delivery or 12 months from installation, whichever comes first.",
+      "reason": "The excerpts provide specific warranty periods for spares and engine parts, which directly addresses the topic of warranty."
+    },
+    {
+      "topic": "claims",
+      "verdict": "supported",
+      "evidence_quote": "if the engine was operated on fuel outside ISO 8217 specification at the time of the failure. The Supplier will confirm acceptance or rejection within 10 working days. Accepted claims are settled by replacement part delivered under standard service level.",
+      "reason": "The excerpt provides details on the claims procedure, including the time frame for submission and response, which directly addresses the topic of claims."
+    },
+    {
+      "topic": "delivery service levels",
+      "verdict": "supported",
+      "evidence_quote": "Kestrel Marine Supply - Warranty and Service Level Terms - fictional document for demonstration Page 2 4. Delivery Service Levels Standard orders: delivery to the Buyer's warehouses in Singapore, Rotterdam or Fujairah within the catalogue lead time for the item. Urgent orders (vessel safety or class-critical items): dispatch within 24 hours and delivery to the vessel at any of those three hubs within 72 hours, subject to stock, at a surcharge of 20% on the item price.",
+      "reason": "The excerpt provides specific details about delivery service levels for both standard and urgent orders from Kestrel Marine Supply, directly addressing the topic."
+    },
+    {
+      "topic": "freight rates",
+      "verdict": "unsupported",
+      "evidence_quote": "Kestrel Marine Supply - Warranty and Service Level Terms - fictional document for demonstration Page 2 4. Delivery Service Levels Standard orders: delivery to the Buyer's warehouses in Singapore, Rotterdam or Fujairah within the catalogue lead time for the item. Urgent orders (vessel safety or class-critical items): dispatch within 24 hours and delivery to the vessel at any of those three hubs within 72 hours, subject to stock, at a surcharge of 20% on the item price.",
+      "reason": "The excerpt provides specific details about freight rates for both standard and urgent orders, including surcharges for urgent deliveries. | rejected: the documents never use 'rates'"
+    }
+  ]
+}

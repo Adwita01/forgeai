@@ -1,0 +1,994 @@
+[
+  {
+    "case_id": "S-01",
+    "category": "single_doc",
+    "question": "What is the maximum time frame for submitting a warranty claim and how long does the supplier have to confirm acceptance or rejection?",
+    "expected_behavior": "answer",
+    "answer": "The maximum time frame for submitting a warranty claim is 14 days. The supplier has to confirm acceptance or rejection within 10 working days.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "30 days": false,
+        "10 working days": true
+      }
+    },
+    "latency_s": 2.89,
+    "tools_called": []
+  },
+  {
+    "case_id": "S-02",
+    "category": "single_doc",
+    "question": "What is the surcharge for urgent orders to be delivered within 72 hours to a vessel's port at one of the three hubs in Singapore, Rotterdam, or Fujairah?",
+    "expected_behavior": "answer",
+    "answer": "The surcharge for urgent orders to be delivered within 72 hours to a vessel's port at one of the three hubs in Singapore, Rotterdam, or Fujairah is 20% of the item price.",
+    "refused": false,
+    "citations": [
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Urgent orders (vessel safety or class-critical items): dispatch within 24 hours and delivery to the vessel at any of those three hubs within 72 hours, subject to stock, at a surcharge of 20% on the item price.": false
+      }
+    },
+    "latency_s": 3.51,
+    "tools_called": [
+      "calculator({'expression': '0.08 * 72'})",
+      "calculator({'expression': '0.08 * 72'})",
+      "calculator({'expression': '0.08 * 72'})"
+    ]
+  },
+  {
+    "case_id": "S-03",
+    "category": "single_doc",
+    "question": "What is the approval limit for orders placed with a frame-agreement supplier for Technical Director positions?",
+    "expected_behavior": "answer",
+    "answer": "The approval limit for orders placed with a frame-agreement supplier for Technical Director positions is USD 100,000.01.",
+    "refused": false,
+    "citations": [
+      "[PROC-01_Spares_Procurement_Procedure.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Managing Director 3, plus budget review": false
+      }
+    },
+    "latency_s": 4.38,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Position': 'Technical Director'}})",
+      "calculator({'expression': '5000.01 + 100000'})",
+      "calculator({'expression': '100000 / 2'})"
+    ]
+  },
+  {
+    "case_id": "S-04",
+    "category": "single_doc",
+    "question": "What is the minimum stock quantity required for the Main engine MAN B&W 6S50ME-C fuel injection valve nozzle?",
+    "expected_behavior": "answer",
+    "answer": "The minimum stock quantity required for the Main engine MAN B&W 6S50ME-C fuel injection valve nozzle is 6.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 1]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "equipment: Main engine MAN B&W 6S50ME-C": true,
+        "min_stock: 6": true
+      }
+    },
+    "latency_s": 4.05,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'equipment': 'Main engine MAN B&W 6S50ME-C', 'min_stock': 'min'}, 'limit': 1})"
+    ]
+  },
+  {
+    "case_id": "S-05",
+    "category": "single_doc",
+    "question": "What is the maximum percentage of credit applied for late delivery of standard orders, and under what condition does this apply?",
+    "expected_behavior": "answer",
+    "answer": "The maximum percentage of credit applied for late delivery of standard orders is 8%. This applies when the order is delivered after its committed date, up to a maximum of 8% of the late items' value, with a maximum of 8% credit applied for each day of delay, up to a maximum of 8%.",
+    "refused": false,
+    "citations": [
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2]",
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 1,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "For standard orders delivered late, the Supplier credits 0.5% of the order value per day of delay, up to a maximum of 5%.": false,
+        "No credit applies to emergency orders where the delay is caused by customs clearance.": false
+      }
+    },
+    "latency_s": 4.87,
+    "tools_called": [
+      "calculator({'expression': 'max(0.08, 0.02)'})",
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Percentage of Credit Applied for Late Delivery': 'max(0.08, 0.02)'}})"
+    ]
+  },
+  {
+    "case_id": "S-06",
+    "category": "single_doc",
+    "question": "What is the maximum duration for which replacement parts are warranted?",
+    "expected_behavior": "answer",
+    "answer": "Replacement parts are warranted for the remainder of the original warranty period or 6 months, whichever is longer.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": false,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Replacement parts are warranted for the remainder of the original warranty period or 6 months, whichever is longer.": true
+      }
+    },
+    "latency_s": 4.42,
+    "tools_called": []
+  },
+  {
+    "case_id": "T-01",
+    "category": "single_doc",
+    "question": "What is the unit price usd for HEP-PU-3001?",
+    "expected_behavior": "answer",
+    "answer": "The unit price USD for HEP-PU-3001 is 2740.00.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 16]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "2740.00": true
+      }
+    },
+    "latency_s": 4.08,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'part_no': 'HEP-PU-3001'}, 'aggregate': {'op': 'avg', 'column': 'unit_price_usd'}})"
+    ]
+  },
+  {
+    "case_id": "T-02",
+    "category": "single_doc",
+    "question": "What is the stock qty for HEP-BO-3201?",
+    "expected_behavior": "answer",
+    "answer": "The stock qty for HEP-BO-3201 is 7.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 20]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "7": true
+      }
+    },
+    "latency_s": 3.29,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'part_no': 'HEP-BO-3201'}})"
+    ]
+  },
+  {
+    "case_id": "T-03",
+    "category": "single_doc",
+    "question": "How much would 4 units of HEP-ME-1004 cost in total, based on the listed unit price usd?",
+    "expected_behavior": "answer",
+    "answer": "The total cost for 4 units of HEP-ME-1004 would be $9,520.00 based on the listed unit price of $2,380.00.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 4]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 1,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "9520": true
+      }
+    },
+    "latency_s": 7.25,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'part_no': 'HEP-ME-1004'}, 'aggregate': {'op': 'sum', 'column': 'unit_price_usd'}})",
+      "calculator({'expression': '4 * 2380.0'})",
+      "calculator({'expression': 'result * 4'}) -> ERROR ValueError: unsupported expression element: Name"
+    ]
+  },
+  {
+    "case_id": "M-01",
+    "category": "multi_doc",
+    "question": "How does the surcharge for urgent orders compare between Halcyon Engine Parts and Kestrel Marine Supply in terms of percentage for delivery to the nearest stock point within 48 hours?",
+    "expected_behavior": "answer",
+    "answer": "The surcharge for urgent orders for delivery to the nearest stock point within 48 hours is 25% for Halcyon Engine Parts and 20% for Kestrel Marine Supply.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2]",
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Halcyon Engine Parts: Emergency (vessel off-hire or main engine immobilised): the Supplier will dispatch from the nearest stock point within 48 hours and deliver to the vessel within 5 days worldwide, at a surcharge of 25% plus actual freight cost.": false,
+        "Kestrel Marine Supply: Urgent orders (vessel safety or class-critical items): dispatch within 24 hours and delivery to the vessel at any of those three hubs within 72 hours, subject to stock, at a surcharge of 20% on the item price.": false
+      }
+    },
+    "latency_s": 4.59,
+    "tools_called": [
+      "calculator({'expression': '100 - 100 / 1.08'})",
+      "calculator({'expression': '100 - 100 / 1.04'})",
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Supplier': 'Halcyon Engine Parts'}, 'query': \"Service Level == 'Urgent'\"})"
+    ]
+  },
+  {
+    "case_id": "M-02",
+    "category": "multi_doc",
+    "question": "Which spares under the warranty terms of Frame Agreement KMS-FA-2026 are covered by a warranty period of 12 months from the date of installation on board, provided that this period does not exceed the 18 months from the date of delivery or installation, whichever expires first?",
+    "expected_behavior": "answer",
+    "answer": "The spares covered by a warranty period of 12 months from the date of installation on board, provided that this period does not exceed the 18 months from the date of delivery or installation, whichever expires first, are not listed in the provided data. The documents do not cover this specific case.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": false,
+    "numeric_ok": null,
+    "groundedness": 0.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 0.0,
+    "passed": false,
+    "failure_category": "WRONG_REFUSAL",
+    "failure_reason": "refused although the expected source was in the retrieved context",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 6.18,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Warranty Period': '=12 months'}, 'query': 'Frame Agreement KMS-FA-2026'})",
+      "calculator({'expression': '12 * 12'})"
+    ]
+  },
+  {
+    "case_id": "M-03",
+    "category": "multi_doc",
+    "question": "For a customer who places an urgent order with Kestrel Marine Supply and also returns a product, which restocking fee applies and within what time frame?",
+    "expected_behavior": "answer",
+    "answer": "For an urgent order with Kestrel Marine Supply, the restocking fee applies at 15% of the item price. Returns are accepted within 30 days of delivery, as stated in the document.",
+    "refused": false,
+    "citations": [
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2: Returns are accepted within 60 days only for items in original sealed packaging, with a restocking fee of 20%": false,
+        "Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2: Returns of unused, undamaged items are accepted within 30 days of delivery subject to a restocking fee of 15%": true
+      }
+    },
+    "latency_s": 3.29,
+    "tools_called": []
+  },
+  {
+    "case_id": "M-04",
+    "category": "multi_doc",
+    "question": "What is the minimum stock quantity for the Emergency generator battery (part_no: KMS-EL-4005) from Kestrel Marine Supply Ltd. that requires a single quotation for orders placed with a frame-agreement supplier, given its criticality level?",
+    "expected_behavior": "answer",
+    "answer": "The minimum stock quantity for the Emergency generator battery (part_no: KMS-EL-4005) from Kestrel Marine Supply Ltd. that requires a single quotation for orders placed with a frame-agreement supplier is 2.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 25]",
+      "[PROC-01_Spares_Procurement_Procedure.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 1,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "required Up to 5,000 Technical Superintendent 1 (frame-agreement supplier) 5,000.01 to 25,000 Fleet Technical Manager 2 25,000.01 to 100,000 Technical Director 3 Above 100,000 Managing Director 3, plus budget review Orders placed with a frame-agreement supplier (Kestrel Marine Supply or Halcyon Engine Parts) at frame prices need only one quotation regardless of value, but the approval limits above still apply.": false,
+        "row 25: part_no: KMS-EL-4005; description: Emergency generator battery 12V 200Ah; equipment: Emergency generator; supplier: Kestrel Marine Supply Ltd.; unit_price_usd: 545.00; stock_qty: 8; min_stock: 2; lead_time_days: 10; warehouse: Singapore; criticality: critical": false
+      }
+    },
+    "latency_s": 5.42,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'criticality': '=critical', 'part_no': '=KMS-EL-4005'}})",
+      "calculator({'expression': 'min(8)'}) -> ERROR TypeError: 'int' object is not iterable",
+      "calculator({'expression': 'min(8) - 1'}) -> ERROR TypeError: 'int' object is not iterable"
+    ]
+  },
+  {
+    "case_id": "M-05",
+    "category": "multi_doc",
+    "question": "For which equipment must a warranty claim be validated with records of installation and delivery within 3 working days, and what is the supplier for a high-criticality navigation spare part with a unit price of $395.00?",
+    "expected_behavior": "answer",
+    "answer": "The warranty claim for a high-criticality navigation spare part with a unit price of $395.00 (KMS-NV-7002) must be validated with records of installation and delivery within 3 working days. The supplier for this part is Kestrel Marine Supply Ltd.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 39]"
+    ],
+    "retrieved_files": [
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "PROC-01 Spares Procurement Procedure - fictional document for demonstration Page 6 states that the vessel or warehouse must inspect the goods within 3 working days and record the delivery date and, once fitted, the installation date in the planned maintenance system to determine the warranty period.": false,
+        "The row 39 of the spare_parts_catalogue.csv contains KMS-NV-7002, which is a backup UPS battery for Navigation equipment with a unit price of $395.00 and criticality level of high.": false
+      }
+    },
+    "latency_s": 5.18,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Supplier': 'Halcyon Engine Parts', 'Criticality': 'High'}, 'query': 'Installation and delivery within 3 working days'})",
+      "calculator({'expression': '395 * 100 / 1.07'})"
+    ]
+  },
+  {
+    "case_id": "R-01",
+    "category": "out_of_scope",
+    "question": "Can you tell me about freight rates?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 2.78,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-02",
+    "category": "out_of_scope",
+    "question": "Can you help me with market prices?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 2.61,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-03",
+    "category": "out_of_scope",
+    "question": "Can you help me with technical repair advice?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to. The provided documents do not cover technical repair advice.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 5.38,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-04",
+    "category": "out_of_scope",
+    "question": "Can you help me with legal interpretation of contracts?",
+    "expected_behavior": "refuse",
+    "answer": "I can't answer that from the documents I have access to.",
+    "refused": true,
+    "citations": [],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "skipped"
+    },
+    "latency_s": 4.13,
+    "tools_called": []
+  },
+  {
+    "case_id": "R-05",
+    "category": "out_of_scope",
+    "question": "How many units are in stock for Kestrel's inventory?",
+    "expected_behavior": "refuse",
+    "answer": "For Kestrel Marine Supply Ltd., the total stock quantity in inventory is 101 units (4 + 4 + 10 + 62 + 4 = 101).",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 22]",
+      "[spare_parts_catalogue.csv row 23]",
+      "[spare_parts_catalogue.csv row 24]",
+      "[spare_parts_catalogue.csv row 39]",
+      "[spare_parts_catalogue.csv row 21]"
+    ],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": null,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 0.0,
+    "passed": false,
+    "failure_category": "HALLUCINATION",
+    "failure_reason": "answered a question that should have been refused",
+    "judge_detail": {
+      "judge_mode": "deterministic",
+      "note": "answered a must-refuse question"
+    },
+    "latency_s": 5.19,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'supplier': 'Kestrel Marine Supply Ltd.'}, 'aggregate': {'op': 'count', 'column': 'part_no'}})"
+    ]
+  },
+  {
+    "case_id": "E-01",
+    "category": "edge",
+    "question": "For which equipment must a warranty claim be validated with records of installation and delivery within 3 working days, and what is the supplier for a high-criticality backup UPS battery with a unit price of $395.00?",
+    "expected_behavior": "answer",
+    "answer": "For a high-criticality backup UPS battery with a unit price of $395.00, the supplier is Kestrel Marine Supply Ltd. A warranty claim must be validated with records of installation and delivery within 3 working days. The equipment for this backup UPS battery is Navigation equipment.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 39]",
+      "[PROC-01_Spares_Procurement_Procedure.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "PROC-01_Spares_Procurement_Procedure.pdf",
+      "spare_parts_catalogue.csv",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "PROC-01 Spares Procurement Procedure - fictional document for demonstration Page 6 states that the vessel or warehouse must inspect the goods within 3 working days and record the delivery date and, once fitted, the installation date in the planned maintenance system to determine the warranty period.": false,
+        "The row 39 of the spare_parts_catalogue.csv contains KMS-NV-7002, which is a backup UPS battery for Navigation equipment with a unit price of $395.00 and criticality level of high.": false
+      }
+    },
+    "latency_s": 6.31,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'criticality': '~high'}, 'query': \"description == 'ECDIS backup UPS battery'\"})",
+      "calculator({'expression': '3 * 5'})"
+    ]
+  },
+  {
+    "case_id": "E-02",
+    "category": "edge",
+    "question": "For a customer who returns an item under Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2 and also places an urgent order with Kestrel Marine Supply, which restocking fee applies and within what time frame?",
+    "expected_behavior": "answer",
+    "answer": "For a customer who returns an item under Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2, the restocking fee is 20%. For an urgent order placed with Kestrel Marine Supply, the restocking fee is 25% of the item price. The restocking fee applies within 60 days of delivery, as stated in the document.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2]",
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.5,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 2,
+      "verified_claims": 2,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2: Returns are accepted within 60 days only for items in original sealed packaging, with a restocking fee of 20%": true,
+        "Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.2: Returns of unused, undamaged items are accepted within 30 days of delivery subject to a restocking fee of 15%": false
+      }
+    },
+    "latency_s": 6.45,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'Customer': 'customer', 'Order_Type': 'urgent'}})",
+      "calculator({'expression': '2 * 0.02'})",
+      "calculator({'expression': '24 * 0.08'})"
+    ]
+  },
+  {
+    "case_id": "E-03",
+    "category": "edge",
+    "question": "I placed an urgent order with Halcyon Engine Parts for a critical part, which was dispatched from the nearest stock point within 48 hours. Given the surcharge structure, what percentage would be added to the item price for this delivery compared to a standard order?",
+    "expected_behavior": "answer",
+    "answer": "For an urgent order, the surcharge is 20% of the item price compared to a standard order, which has no surcharge.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.2]"
+    ],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": false,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 1,
+      "verified_claims": 1,
+      "fabricated_quotes": 1,
+      "claims_rescued": 1,
+      "unsupported_claims": [],
+      "facts": {
+        "Halcyon Engine Parts: Emergency (vessel off-hire or main engine immobilised): the Supplier will dispatch from the nearest stock point within 48 hours and deliver to the vessel within 5 days worldwide, at a surcharge of 25% plus actual freight cost.": false,
+        "Kestrel Marine Supply: Urgent orders (vessel safety or class-critical items): dispatch within 24 hours and delivery to the vessel at any of those three hubs within 72 hours, subject to stock, at a surcharge of 20% on the item price.": false
+      }
+    },
+    "latency_s": 3.5,
+    "tools_called": [
+      "calculator({'expression': '100 / 100'})",
+      "calculator({'expression': '100 / 100'})",
+      "calculator({'expression': '100 / 100'})"
+    ]
+  },
+  {
+    "case_id": "E-04",
+    "category": "edge",
+    "question": "What is NOT the minimum stock quantity required for the Main engine MAN B&W 6S50ME-C fuel injection valve nozzle? Hint: The correct answer is not 6.",
+    "expected_behavior": "answer",
+    "answer": "The minimum stock quantity required for the Main engine MAN B&W 6S50ME-C fuel injection valve nozzle is 6. The correct answer is not 6.",
+    "refused": false,
+    "citations": [
+      "[spare_parts_catalogue.csv row 1]"
+    ],
+    "retrieved_files": [
+      "spare_parts_catalogue.csv"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 1.0,
+    "refusal_accuracy": 1.0,
+    "passed": true,
+    "failure_category": null,
+    "failure_reason": "",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 0,
+      "verified_claims": 0,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "equipment: Main engine MAN B&W 6S50ME-C": true,
+        "min_stock: 6": true
+      }
+    },
+    "latency_s": 6.65,
+    "tools_called": [
+      "csv_lookup({'file': 'spare_parts_catalogue.csv', 'filters': {'equipment': 'Main engine MAN B&W 6S50ME-C', 'description': 'Fuel injection valve nozzle'}, 'aggregate': {'op': 'min', 'column': 'stock_qty'}})"
+    ]
+  },
+  {
+    "case_id": "E-05",
+    "category": "edge",
+    "question": "How long can a part be covered under the warranty after I bought it?",
+    "expected_behavior": "answer",
+    "answer": "The warranty period for parts can be up to 24 months from delivery or 12 months from installation, whichever comes first. For parts installed on board, the warranty period is 18 months from the date of installation. Consumable and wear items carry a reduced warranty of 6 months from delivery. The exact duration depends on the specific part and its installation date.",
+    "refused": false,
+    "citations": [
+      "[Halcyon_Engine_Parts_Warranty_and_SLA.pdf p.1]",
+      "[Kestrel_Marine_Supply_Warranty_and_SLA.pdf p.1]"
+    ],
+    "retrieved_files": [
+      "Halcyon_Engine_Parts_Warranty_and_SLA.pdf",
+      "Kestrel_Marine_Supply_Warranty_and_SLA.pdf",
+      "PROC-01_Spares_Procurement_Procedure.pdf"
+    ],
+    "citations_valid": true,
+    "invalid_citations": [],
+    "citation_present": true,
+    "expected_source_retrieved": true,
+    "expected_source_cited": true,
+    "numeric_ok": true,
+    "groundedness": 1.0,
+    "factuality": 0.0,
+    "refusal_accuracy": 1.0,
+    "passed": false,
+    "failure_category": "PROMPT_DEFECT",
+    "failure_reason": "evidence was retrieved but answer missed expected facts (factuality 0%)",
+    "judge_detail": {
+      "judge_mode": "quote_verified_llm",
+      "n_claims": 3,
+      "verified_claims": 3,
+      "fabricated_quotes": 0,
+      "claims_rescued": 0,
+      "unsupported_claims": [],
+      "facts": {
+        "Replacement parts are warranted for the remainder of the original warranty period or 6 months, whichever is longer.": false
+      }
+    },
+    "latency_s": 5.41,
+    "tools_called": []
+  }
+]
