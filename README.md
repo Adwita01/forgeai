@@ -73,6 +73,8 @@ Each `run/` folder contains `requirements.json`, `agent_definition.json`, `eval_
 
 ## Results
 
+> **Where these runs came from:** the committed demo runs and the baseline comparison were produced on a free Kaggle T4 GPU ([`kaggle/forgeai_kaggle.ipynb`](kaggle/forgeai_kaggle.ipynb)), using the same Ollama `qwen2.5:3b` model and the same code. That is why each build took only about 6-10 minutes; on a laptop CPU, expect roughly 1-3 hours per build.
+
 <!-- RESULTS:START -->
 ### Demo 1 - Maritime HR & Shore-Leave
 
