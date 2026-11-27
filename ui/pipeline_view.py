@@ -28,21 +28,23 @@ def render() -> None:
     run = st.selectbox("Factory run", runs, format_func=rel)
     run = Path(run)
 
-    cols = st.columns(len(STAGES))
-    for c, (name, f) in zip(cols, STAGES):
-        ok = (run / f).exists()
-        c.markdown(f"{'✅' if ok else '⏳'} **{name}**")
+    # stage checklist: wrapping pills (green dot = artifact written), styled in app.py
+    chips = "".join(
+        f'<span class="fx-stage{" done" if (run / f).exists() else ""}" title="{f}"><i></i>{name}</span>' for name, f in STAGES)
+    st.markdown(f'<div class="fx-section">Pipeline stages</div><div class="fx-stages">{chips}</div>', unsafe_allow_html=True)
 
     sc = load_json(run / "scorecard.json", {})
     final = sc.get("final")
     if final:
-        m = st.columns(6)
-        m[0].metric("Pass rate", f"{final['pass_rate']:.0%}")
-        m[1].metric("Overall", f"{final['overall']:.3f}")
-        m[2].metric("Groundedness", f"{final['groundedness']:.2f}")
-        m[3].metric("Factuality", f"{final['factuality']:.2f}")
-        m[4].metric("Refusal acc.", f"{final['refusal_accuracy']:.2f}")
-        m[5].metric("Cases", final["n_cases"])
+        st.markdown(f'<div class="fx-section">Scorecard · final agent v{final.get("agent_version", "?")}</div>', unsafe_allow_html=True)
+        row1, row2 = st.columns(3, gap="small"), st.columns(3, gap="small")
+        row1[0].metric("Pass rate", f"{final['pass_rate']:.0%}")
+        row1[1].metric("Overall", f"{final['overall']:.3f}")
+        row1[2].metric("Cases", final["n_cases"])
+        row2[0].metric("Groundedness", f"{final['groundedness']:.2f}")
+        row2[1].metric("Factuality", f"{final['factuality']:.2f}")
+        row2[2].metric("Refusal acc.", f"{final['refusal_accuracy']:.2f}")
+        st.write("")
 
     tabs = st.tabs(["Requirements", "Agent", "Eval set", "Iterations & diffs", "Failures", "Report", "Manifest", "Budget"])
     with tabs[0]:
