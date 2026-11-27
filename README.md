@@ -117,23 +117,6 @@ Each `run/` folder contains `requirements.json`, `agent_definition.json`, `eval_
 
 Final (best kept version v1): **77% pass, overall 0.802**. Full honest write-up: [`demos/demo1_hr/run/quality_report.md`](demos/demo1_hr/run/quality_report.md).
 
-### Demo 2 - Vessel Spares & Procurement
-
-- **Agent:** Procurement Assistant (v3)
-- **Tools attached:** `csv_lookup`, `calculator`
-- **Retrieval:** chunk 160 / overlap 26, top_k 6, alpha 0.35
-- **Ungrounded requirements caught:** freight rates
-- **Eval set:** 24 cases (edge 5, multi_doc 5, out_of_scope 5, single_doc 9)
-- **Cost:** 390776 tokens, 559.9 s wall clock
-
-| Iter | Agent v | Pass rate | Groundedness | Factuality | Refusal acc. | Citation validity | Overall |
-|---|---|---|---|---|---|---|---|
-| 0 | 0 | 54% | 0.95 | 0.40 | 0.92 | 1.00 | 0.669 |
-| 1 | 1 | 50% | 0.90 | 0.42 | 0.83 | 1.00 | 0.630 |
-| 2 | 2 | 50% | 0.90 | 0.40 | 0.88 | 1.00 | 0.633 |
-| 3 | 3 | 54% | 0.95 | 0.42 | 0.92 | 1.00 | 0.674 |
-
-Final (best kept version v3): **54% pass, overall 0.674**. Full honest write-up: [`demos/demo2_spares/run/quality_report.md`](demos/demo2_spares/run/quality_report.md).
 
 ### Factory vs hand-crafted baseline (Demo 1)
 
