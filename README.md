@@ -38,6 +38,21 @@ streamlit run app.py                 # Runs / Chat / Build tabs
 `--brief` accepts a file path or literal text. `python -m forgeai --help` lists every command:
 `build`, `run`, `eval`, `compare`, `manifest`, `doctor`.
 
+## Running it on an unseen brief (review day)
+
+```powershell
+python -m forgeai doctor                                   # model server reachable, models pulled, embeddings ok
+python -m forgeai build -b brief.txt -d path\to\docs -o review_run              # interactive: answer up to 5 questions
+python -m forgeai build -b brief.txt -d path\to\docs -o review_run --auto-answer # or fully unattended
+python -m forgeai run review_run\agent_definition.json      # chat with the produced agent (/context, /quit)
+python -m streamlit run app.py                              # or inspect every stage in the browser
+```
+
+- `review_run\quality_report.md` is the honest summary. `review_run\run_status.json` says whether the run completed, was cut short by a budget, or was aborted, and at which stage.
+- On a CPU-only machine, cap the run: `--max-seconds 2700` (45 min) or a quick check with `--max-cases 6 --max-iters 1`. A capped run still writes every artifact and a report saying what was cut.
+- Add `--approve` (interactive mode) to review and edit `requirements.json` before the agent is generated.
+- Supported documents: PDF (text layer), CSV, TXT and MD. Scanned PDFs without text are flagged in the manifest, not OCR'd.
+
 ## How each requirement is met
 
 | # | Requirement | Where | How |
@@ -47,7 +62,7 @@ streamlit run app.py                 # Runs / Chat / Build tabs
 | 2 | Groundability guard | `stages/groundability.py` | Probes the corpus for each must-answer topic and needs a verbatim quote to accept it. Unsupported topics become `ungrounded_requirements` and are moved to must-refuse. |
 | 3 | Declarative generator | `stages/generator.py` | System prompt, retrieval config and output contract. **Tools are gated deterministically** from the brief and the requester's answers (with negation detection), never from model opinion alone. Each tool's decision is logged. |
 | 4 | Eval generator | `stages/eval_gen.py` | ≥22 cases: single-doc, multi-doc, CSV and calculator, refusal traps (including the gaps found by the guard), and edge cases (vague, typo, indirect, negation). Key facts are verified to occur in the source passage before a case is kept. |
-| 5 | Hybrid judge | `stages/judge.py` | Deterministic checks first (refusal, citation validity against the manifest, exact numbers). Then a quote-before-score LLM judge: every claim must carry a quote, and any quote not found verbatim in the retrieved context is rejected as fabricated. |
+| 5 | Hybrid judge | `stages/judge.py` | Deterministic checks first (refusal, citation validity against the manifest, exact numbers). Then a quote-before-score LLM judge: every claim must carry a quote, and any quote not found verbatim in the retrieved context is rejected as fabricated. Known judge biases: *position bias* does not arise (each answer is graded alone, never pairwise); *verbosity bias* is countered because groundedness is the share of claims that check out, so padding lowers the score; *self-preference* is limited by quote verification, exact-number checks and deterministic fact matching, and a different judge can be set with `FORGE_JUDGE_MODEL`. |
 | 6 | Critic-optimizer | `stages/optimizer.py` | Classifies each failure as RETRIEVAL_MISS, PROMPT_DEFECT, HALLUCINATION or WRONG_REFUSAL and applies a targeted patch (retrieval ladder, leakage-filtered rules, contract fixes). Reverts on regression, stops early on small gains or when the budget runs out. Writes `iteration_log.json`. |
 | 7 | Quality report | `report.py` | Per-iteration scorecard, what still fails and why, judge integrity counters, and the limitations of the evaluation. |
 | 8 | Runners | `cli.py`, `app.py` | `forge run` CLI chat (`/context` shows retrieved chunks) and a Streamlit UI. |
@@ -57,7 +72,17 @@ streamlit run app.py                 # Runs / Chat / Build tabs
 
 **Failure behaviour.** If the time or token budget runs out in any stage, the build finishes cleanly. The setup stages fall back to deterministic defaults, evaluation scores only the cases it completed (the scorecard is marked `complete: false`), the optimizer stops, and the report opens with a "cut short" banner. A dead, out-of-memory or stalled model server is a different case: the build stops within a couple of retries, not after hours of timeouts. Every run leaves a `run_status.json` (`complete`, `budget_exhausted` or `aborted`, plus the stage it reached). Because completed LLM calls are cached, rerunning the same command resumes almost instantly.
 
-**Stretch goals.** Token and time budgets with early stopping (`--max-tokens`, `--max-seconds`, per-stage accounting in `budget.json`); a factory-vs-hand-crafted baseline comparison (`forge compare`); a human checkpoint on requirements (`--approve`).
+### Stretch goals
+
+| Stretch goal | Status | How |
+|---|---|---|
+| Budget enforcement | ✅ Done | `--max-tokens` / `--max-seconds`, per-stage accounting in `budget.json`; the optimizer stops when an iteration gains less than `FORGE_MIN_GAIN` or the next one would not fit the budget |
+| Human checkpoint | ✅ Done | `--approve` pauses after `requirements.json`; approve as-is, edit and `reload`, or `abort` |
+| Factory vs human baseline | ✅ Done | Hand-written agent in `demos/demo1_hr/baseline/`; `forge compare` on the same eval set. Honest result: equal pass rate (77%), factory better on citations and factuality, baseline better on groundedness and refusals |
+| UI | ✅ Done | Streamlit app (`app.py`): browse every run stage, chat with any agent, launch builds |
+| Regression mode | ◐ Via commands | Rebuild with the old test set, then compare per case: `forge build ... --reuse-eval-set old_run\eval_set.json -o new_run`, then `forge compare new_run\agent_definition.json old_run\agent_definition.json -e old_run\eval_set.json` (the report lists cases that newly fail). `forge eval --docs` re-scores an agent against a changed document folder. No automatic change detection |
+| Prompt tournament | ✗ Not attempted | |
+| Free-tier hosting | ✗ Not attempted | The app runs locally; it needs a model server, which free hosting tiers cannot run |
 
 ## Demos
 
@@ -146,6 +171,20 @@ To re-score an edited agent against a fixed test set, use `--reuse-eval-set path
 - The eval set is written by the same small model family the agent uses, so pass rates are optimistic. The optimizer tunes on that same set (there is no held-out split), so part of any gain may be overfitting.
 - Factuality is matched literally, with numbers matched exactly. A correct paraphrase can be under-credited, and a partially correct answer can still pass the 50% factuality threshold.
 - The judge model is the agent model unless `FORGE_JUDGE_MODEL` is set. Quote verification limits self-preference but does not remove it.
+
+## Repository layout
+
+```
+src/forgeai/            the factory: manifest, LLM client, retriever, tools, pipeline, report, CLI
+  stages/               interviewer, groundability, generator, eval_gen, judge, optimizer
+  tools/                csv_lookup, calculator, open_meteo_weather, current_date
+prompts/                every prompt the factory uses, including the eval-generation prompts
+app.py, ui/             Streamlit UI (theme in .streamlit/config.toml)
+demos/demo1_hr/         HR brief, answers, docs, synthesis/ (scripts + prompts), baseline/, run/, baseline_comparison/
+demos/demo2_spares/     procurement brief, answers, docs, synthesis/, run/
+kaggle/, scripts/       free-GPU notebook, bundle builder, README results updater
+tests/                  35 tests against a scripted fake LLM (no model server needed)
+```
 
 ## Tests
 
